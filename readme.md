@@ -172,16 +172,16 @@ binance.getCandles(sDate, eDate, pair, "1m")
 
 ```ts
 interface Candle {
-	openAt: Date;
-	closeAt: Date;
-	open: number;
-	close: number;
-	high: number;
-	low: number;
-	volume: number;
-	exchange: string;
-	pair: ExchangePair;
-	interval: ExchangeInterval;
+  openAt: Date;
+  closeAt: Date;
+  open: number;
+  close: number;
+  high: number;
+  low: number;
+  volume: number;
+  exchange: string;
+  pair: ExchangePair;
+  interval: ExchangeInterval;
 }
 ```
 
@@ -226,7 +226,7 @@ const indicators = new Indicators();
 #### Price
 ```ts
 const price = indicators.price({
-	mode: "high" // "high" | "low" | "close" | "open";
+  mode: "high" // "high" | "low" | "close" | "open";
 });
 
 price.generate(candle);
@@ -237,7 +237,7 @@ console.log(price.lastValue) // 152400.2
 #### SMA
 ```ts
 const sma = indicators.sma({
-	period : 12 // number;
+  period : 12 // number;
 });
 
 sma.generate(candle);
@@ -247,7 +247,7 @@ console.log(sma.lastValue) // 254.2
 #### EMA
 ```ts
 const ema = indicators.ema({
-	period : 12 // number;
+  period : 12 // number;
 });
 
 ema.generate(candle);
@@ -257,7 +257,7 @@ console.log(ema.lastValue) // 124.5
 #### RSI
 ```ts
 const rsi = indicators.rsi({
-	period : 12 // number;
+  period : 12 // number;
 });
 
 rsi.generate(candle);
@@ -267,7 +267,7 @@ console.log(rsi.lastValue) // 748.5
 #### ATR
 ```ts
 const atr = indicators.atr({
-	period : 12 // number;
+  period : 12 // number;
 });
 
 atr.generate(candle);
@@ -277,20 +277,20 @@ console.log(atr.lastValue) // 748.5
 #### MACD
 ```ts
 const macd = indicators.macd({
-	SimpleMAOscillator: true, // boolean
-	SimpleMASignal: true, // boolean
-	fastPeriod: 12, // number
-	slowPeriod: 24, // number
-	signalPeriod: 12 // number
+  SimpleMAOscillator: true, // boolean
+  SimpleMASignal: true, // boolean
+  fastPeriod: 12, // number
+  slowPeriod: 24, // number
+  signalPeriod: 12 // number
 });
 
 macd.generate(candle);
 console.log(macd.lastValue)
 /*
 {
-	MACD: 20, // number
-	histogram: 50, // number
-	signal: 10, // number
+  MACD: 20, // number
+  histogram: 50, // number
+  signal: 10, // number
 }
 */
 ```
@@ -449,19 +449,19 @@ const ATRTrigger = new  ATRTrigger({ indicator: price, field: "value", triggerVa
 #### MACD
 ```ts
 const macd = indicators.macd({
-	SimpleMAOscillator: true, // boolean
-	SimpleMASignal: true, // boolean
-	fastPeriod: 12, // number
-	slowPeriod: 24, // number
-	signalPeriod: 12 // number
+  SimpleMAOscillator: true, // boolean
+  SimpleMASignal: true, // boolean
+  fastPeriod: 12, // number
+  slowPeriod: 24, // number
+  signalPeriod: 12 // number
 });
 const macdTrigger = new  MACDTrigger({
-	indicator: macd,
-	field: "histogram", // can be either "MACD" | "histogram" | "signal"
-	triggerValue : 2,
-	comparer: ">=", mode:
-	"percentage",
-	tMinus: 5
+  indicator: macd,
+  field: "histogram", // can be either "MACD" | "histogram" | "signal"
+  triggerValue : 2,
+  comparer: ">=", mode:
+  "percentage",
+  tMinus: 5
 })
 // Check if MACD histogram as gained 2% over the last 5 minutes
 ```

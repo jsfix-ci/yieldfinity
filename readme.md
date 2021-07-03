@@ -1,5 +1,5 @@
 # Strategy backtester
-A complete TS / node strategies backtester for crypto trading or others
+A node strategy backtesting / running framework for crypto trading and more.
 
 # Summary 
 - [Getting started](#getting-started)

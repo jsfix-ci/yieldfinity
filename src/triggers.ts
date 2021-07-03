@@ -1,1 +1,1 @@
-export { PriceTrigger, SMATrigger, RSITrigger, MACDTrigger, ATRTrigger, EMATrigger } from "./domain";
+export { PriceTrigger, SMATrigger, RSITrigger, MACDTrigger, ATRTrigger, EMATrigger, CustomTrigger } from "./domain";

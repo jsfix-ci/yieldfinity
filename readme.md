@@ -45,45 +45,59 @@ Yieldfinity is a TS / node strategy backtesting framework, currently under activ
 This method uses a custom function which triggers either a `buy` or a `sell` order. Let's make a ridiculously stupid strategy : if the price is even, we buy, else we sell.
 
 ```ts
-import { Indicators } from "./adapters/factories/indicators.factory";
-import { CandleRepository } from "./adapters/repositories/candle.repository";
-import { ExchangePair } from "./domain/port/repositories/exchange.port";
-import { Order } from "./domain/entities/orders/order";
-import { Strategy } from "./domain/entities/strategy";
-import { CustomTrigger } from "./domain/entities/triggers/custom.trigger";
-import { CustomTriggerFlow } from "./domain/entities/custom-trigger-flow";
+import { Strategy, ExchangePair, Binance } from "yieldfinity";
+import { Indicators } from "yieldfinity/indicators";
+import { Position, Order, StopLoss, TakeProfit } from "yieldfinity/orders";
+import { CustomTriggerFlow } from "yieldfinity/flows";
+import { CustomTrigger } from "yieldfinity/triggers";
 
 const pair: ExchangePair = "BTCUSDT";
-const sDate = new Date("2021-01-01");
-const eDate = new Date("2021-04-30");
+const sDate = new Date("2021-01-07");
+const eDate = new Date("2021-03-28");
+const binance = new Binance();
 
-// Fetching the candles
-const candles = await new CandleRepository().getCandles(sDate, eDate, pair, "1m");
-const indicators = new Indicators();
+binance.getCandles(sDate, eDate, pair, "1m")
+.then((candles: Candle[]) => {
+  const indicators = new Indicators();
 
-// Building the indicator
-const sma = indicators.sma({ period : 12 });
-const price = indicators.price({ mode: "high" });
+  // Building the indicator
+  const sma = indicators.sma({ period : 12 });
+  const price = indicators.price({ mode: "high" });
 
-// Build a custom strategy flow
-const customTriggerFlow = new CustomTriggerFlow({
-  triggers: [
-    new CustomTrigger({
-      parameters: ({indicators: [price, sma]})
-      method : ({ indicators }) => {
-        return indicators.price.lastValue % 2 ?
-          new Order({ pair, price : "market", quantity : 1, side:  "ask", stopLossTakeProfit : [], closed: false }) :
-          new Order({ pair, price : "market", quantity : 1, side:  "bid", stopLossTakeProfit : [], closed: false });
-      }
-    })
-  ]
-})
+  // We build the trigger flow
+  const customTriggerFlow = new CustomTriggerFlow({
+    triggers: [
+      new CustomTrigger({
+        parameters: {
+          indicators: [price, sma],
+          pair
+        },
+        // If the price is odd then we place buy order
+        method : ({indicators}) => {
+          return (price.lastValue % 2) ? new Order({
+            pair,
+            price : "market",
+            quantity : 0.01,
+            side: "ask",
+            stopLoss : new StopLoss({ reference : "pnl",  value: -5 }),
+            takeProfit : new TakeProfit({ reference : "pnl",  value: 10 })
+          }) : null;
+        }
+      })
+    ]
+  })
 
-// Building the stategy & backtest
-const strategy = new Strategy({ indicators: [price, sma], triggerFlow: customTriggerFlow });
-strategy.run(candles);
+  // Building the stategy & backtest
+  const strategy = new Strategy({ indicators: [price, sma], triggerFlow: customTriggerFlow, exchanges: [binance] });
 
-console.log(`${strategy.closedPositions.filter(pos => pos.state.profit > 0).length}/${strategy.closedPositions.length} profitable positions`)
+  strategy.run(candles);
+  strategy.savePositions();
+
+  const profit = strategy.profit;
+  const pnl = strategy.pnl;
+  const profitablePositions = Math.ceil(strategy.profitablePositions.length / strategy.positions.length * 100);
+  console.log(`Strategy made a profit of ${profit} (${pnl}%) : ${profitablePositions}% of positions were profitable`);
+});
 
 ```
 
@@ -104,40 +118,44 @@ const pair: ExchangePair = "BTCUSDT";
 const sDate = new Date("2021-01-01");
 const eDate = new Date("2021-01-30");
 const binance = new Binance();
-const candles = await binance.getCandles(sDate, eDate, pair, "1m");
-const indicators = new Indicators();
 
-// Building the indicator
-const sma = indicators.sma({ period : 12 });
-const price = indicators.price({ mode: "high" });
+binance.getCandles(sDate, eDate, pair, "1m")
+.then((candles: Candle[]) => {
+  const indicators = new Indicators();
 
-// Building the triggers
-const triggers = [
-  new SMATrigger({ indicator: sma, field: "value", triggerValue : 2, comparer: ">=", mode: "percentage", tMinus: 60*24 }),
-  new PriceTrigger({ indicator: price, field: "value", triggerValue : 10, comparer: ">=", mode: "percentage", tMinus:  60 * 12 }),
-];
+  // Building the indicator
+  const sma = indicators.sma({ period : 12 });
+  const price = indicators.price({ mode: "high" });
 
-const triggerFlow = new TriggerFlow({
-  flow : [{
-    triggers,
-    operator : "and",
-    position: new Order({
-      pair,
-      price : "market",
-      quantity : 1,
-      side: "ask",
-      stopLoss : new StopLoss({ reference : "pnl",  value: -5 }),
-      takeProfit : new TakeProfit({ reference : "pnl",  value: 10 })
-    })
-  }]
+  // Building the triggers
+  const triggers = [
+    new SMATrigger({ indicator: sma, field: "value", triggerValue : 2, comparer: ">=", mode: "percentage", tMinus: 60*24 }),
+    new PriceTrigger({ indicator: price, field: "value", triggerValue : 10, comparer: ">=", mode: "percentage", tMinus:  60 * 12 }),
+  ];
+
+  const triggerFlow = new TriggerFlow({
+    flow : [{
+      triggers,
+      operator : "and",
+      position: new Order({
+        pair,
+        price : "market",
+        quantity : 1,
+        side: "ask",
+        stopLoss : new StopLoss({ reference : "pnl",  value: -5 }),
+        takeProfit : new TakeProfit({ reference : "pnl",  value: 10 })
+      })
+    }]
+  });
+
+  // Building the stategy & backtest
+  const strategy = new Strategy({ indicators: [price, sma], triggerFlow, exchanges: [binance] });
+
+  strategy.run(candles);
+
+  console.log(`${strategy.closedPositions.filter(pos => pos.state.profit > 0).length}/${strategy.closedPositions.length} profitable positions`)
 });
 
-// Building the stategy & backtest
-const strategy = new Strategy({ indicators: [price, sma], triggerFlow, exchanges: [binance] });
-
-strategy.run(candles);
-
-console.log(`${strategy.closedPositions.filter(pos => pos.state.profit > 0).length}/${strategy.closedPositions.length} profitable positions`)
 
 ```
 
@@ -295,9 +313,10 @@ import { CustomTriggerFlow } from "yieldfinity/flows";
 const customTriggerFlow = new CustomTriggerFlow({
   triggers: [
     new CustomTrigger({
-	    parameters: [price], // Indicator[]
-	    method : ([price]) => {
-	     // Define your own method here, return a position or null;
+      parameters: [price], // Indicator[]
+      method : ([price]) => {
+        // Define your own method here, return a position or null;
+        return null;
       }
     })
   ]

@@ -77,6 +77,7 @@ binance.getCandles(sDate, eDate, pair, "1m")
         },
         // If the price is odd then we place buy order
         method : ({indicators}) => {
+          const [price, sma] = indicators;
           return (price.lastValue % 2) ? new Order({
             pair,
             price : "market",

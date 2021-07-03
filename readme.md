@@ -45,52 +45,7 @@ This project is a TS / node strategy backtester, marketly under active developme
 This method uses pre-built indicator triggers to handle orders.
 
 ```ts
-import { Indicators } from "./adapters/factories/indicators.factory";
-import { CandleRepository } from "./adapters/repositories/candle.repository";
-import { ExchangePair } from "./domain/port/repositories/exchange.port";
-import { Order } from "./domain/entities/orders/order";
-import { Strategy } from "./domain/entities/strategy";
-import { CustomTrigger } from "./domain/entities/triggers/custom.trigger";
-import { CustomTriggerFlow } from "./domain/entities/custom-trigger-flow";
 
-const pair: ExchangePair = "BTCUSDT";
-const sDate = new Date("2021-01-01");
-const eDate = new Date("2021-04-30");
-
-// Fetching the candles
-const candles = await new CandleRepository().getCandles(sDate, eDate, pair, "1m");
-const indicators = new Indicators();
-
-
-// Building the orders
-const askOrder = new Order({ pair, price : "market", quantity : 1, side:  "ask", stopLossTakeProfit : [], closed: false });
-const bidOrder = new Order({ pair, price : "market", quantity : 1, side:  "bid", stopLossTakeProfit : [], closed: false });
-
-// Building the indicator
-const sma = indicators.sma({ period : 12 });
-const price = indicators.price({ mode: "high" });
-
-
-// Building the triggers
-const triggers = [
-  new SMATrigger({ indicator: sma, field: "value", triggerValue : 2, comparer: ">=", mode: "percentage", tMinus: 60*24 }),
-  new PriceTrigger({ indicator: price, field: "value", triggerValue : 10, comparer: ">=", mode: "percentage", tMinus:  60 * 12 }),
-];
-
-// Building the indicator trigger flow
-const triggerFlow = new TriggerFlow({
-  flow : [
-    {
-	    triggers : triggers,
-	    operator : "and", // if "and", all triggers must be met to send the order, if "or", only one is needed to trigger ther order
-	    position: askOrder
-	 },
-  ]
-});
-
-// Building the stategy & backtest
-const strategy = new Strategy({ indicators: [price, sma], triggerFlow: customTriggerFlow });
-strategy.backtest(candles);
 
 ```
 

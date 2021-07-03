@@ -6,14 +6,15 @@ import { TriggerFlow } from "./trigger-flow";
 import cliProgress from "cli-progress";
 import { CustomTriggerFlow } from "./custom-trigger-flow";
 import { ExchangeRepository } from "../port/repositories/exchange.port";
+import tmp from "tmp";
 import fs from "fs";
-import { OrderParameters } from "../port/entities/orders/order.port";
 
 
 export class Strategy {
 
   private _positions: Position[] = [];
-  private _positionsFile: string = `${Date.now() + Math.ceil(Math.random() * 100000)}.json`;
+  private _positionsFile: string = tmp.fileSync({ mode: 0o644, prefix: `${Math.ceil(Math.random() * 10000)}`, postfix: '.json' }).name;
+
   constructor(private props: StrategyProps) { }
   
   get indicator() : Indicator[] { return this.props.indicators };

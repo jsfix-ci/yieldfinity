@@ -1,0 +1,36 @@
+{
+  "name": "yieldfinity",
+  "version": "1.0.1",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/typescript": "^2.0.0",
+    "axios": "^0.21.1",
+    "cli-progress": "^3.9.0",
+    "csv-parse": "^4.16.0",
+    "technicalindicators": "^3.1.0",
+    "tmp": "^0.2.1",
+    "tsc": "^2.0.3",
+    "typescript": "^4.3.5",
+    "unzipper": "^0.10.11",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.23",
+    "jest": "^27.0.6"
+  },
+  "description": "A strategy backtester/runner for trading / cryptotrading",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/fabiensabatie/yieldfinity.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fabiensabatie/yieldfinity/issues"
+  },
+  "homepage": "https://github.com/fabiensabatie/yieldfinity#readme"
+}

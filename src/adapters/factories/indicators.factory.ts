@@ -12,7 +12,7 @@ import { PriceIndicatorParameters } from "../../domain/port/entities/indicators/
 import { IndicatorMethodParametersMapper } from "../mappers/indicator-method.mapper";
 import { v4 as uuid } from "uuid";
 
-export class IndicatorsFactory implements IndicatorsFactoryInterface {
+export class Indicators implements IndicatorsFactoryInterface {
 
   private dependencies : IndicatorsFactoryProps = { mapper: new IndicatorMethodParametersMapper(), uuid }
   indicatorDependencies:IndicatorDependencies = { mapper: this.dependencies.mapper };

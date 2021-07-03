@@ -40,29 +40,6 @@ A complete TS / node strategies backtester for crypto trading or others
 
 This project is a TS / node strategy backtester, marketly under active development. It fetches candle data from binance for any given pair, allows you to create strategies, feed them indicators and triggers, and backtest them. Strategies rely on one or many [indicators](#indicators) and either [indicator triggers](#indicator-triggers) or [custom triggers](#custom-triggers) to work. Indicators provide the computed candle data, and the indicator triggers are function checking if they should trigger an order or not.
 
-# Quickstart
-
-
-Create a temporary folder to store the historical data in, and create your .env as such : 
-
-```
-TEMPORARY_FOLDER = "tmp"
-DB_HOST = "POSTGRESQL_DB_HOST"
-DB_PORT = "POSTGRESQL_DB_PORT"
-PORT = "80"
-DB_USERNAME = "POSTGRESQL_DB_USERNAME"
-DB_PASSWORD = "POSTGRESQL_DB_PASSWORD"
-DB_NAME = "POSTGRESQL_DB_NAME"
-```
-
-Then you can :
-
-```
-npm i && npm run go
-```
-
-> Will fetch example candle data from binance 
-
 ## Indicator trigger based strategies
 
 This method uses pre-built indicator triggers to handle orders.

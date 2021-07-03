@@ -1,8 +1,8 @@
 
-import { IndicatorDependencies, IndicatorInput, IndicatorOutput, IndicatorParameters, IndicatorProps, Indicators } from "../port/entities/indicator.port";
+import { IndicatorDependencies, IndicatorInput, IndicatorOutput, IndicatorParameters, IndicatorProps, IndicatorsName } from "../port/entities/indicator.port";
 import { Candle } from "./candle";
 
-export type IndicatorsList = { [key in Indicators] : Indicator[] }
+export type IndicatorsList = { [key in IndicatorsName] : Indicator[] }
 
 export class Indicator {
 

@@ -23,11 +23,16 @@ interface CandleZipFile {
   folder : string;
 }
 
+const file = new File(), csv = new Csv({ file }), zip = new Zip();
+const binanceDependencies = { zip, csv, file };
+
 export class Binance implements ExchangeRepository {
   private _url = "https://data.binance.vision/data/spot/monthly/klines";
   private _auth: boolean = false;
 
-  constructor(private dependencies : BinanceExchangeDependencies) {}
+  constructor(private dependencies ?: BinanceExchangeDependencies) {
+    if (!dependencies) this.dependencies = binanceDependencies;
+  }
 
   public async auth(credentials: BinanceCredentials) {
     this._auth = true;
@@ -66,8 +71,3 @@ export class Binance implements ExchangeRepository {
    return candles.flat().filter(candle => candle.openAt >= sDate && candle.closeAt <= eDate);
   }
 }
-
-const file = new File(), csv = new Csv({ file }), zip = new Zip();
-const binanceDependencies = { zip, csv, file };
-
-export default new Binance(binanceDependencies);;

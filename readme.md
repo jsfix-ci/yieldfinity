@@ -38,16 +38,7 @@ A complete TS / node strategies backtester for crypto trading or others
   - [Visualising your strategies](https://github.com/fabiensabatie/backtester-front)
 # Getting started
 
-This project is a TS / node strategy backtester, marketly under active development. It fetches candle data from binance for any given pair, allows you to create strategies, feed them indicators and triggers, and backtest them. Strategies rely on one or many [indicators](#indicators) and either [indicator triggers](#indicator-triggers) or [custom triggers](#custom-triggers) to work. Indicators provide the computed candle data, and the indicator triggers are function checking if they should trigger an order or not.
-
-## Indicator trigger based strategies
-
-This method uses pre-built indicator triggers to handle orders.
-
-```ts
-
-
-```
+Yieldfinity is a TS / node strategy backtesting framework, currently under active development. It fetches candle data from binance for any given pair, allows you to create strategies, feed them indicators and triggers, and backtest them. Strategies rely on one or many [indicators](#indicators) and either [indicator triggers](#indicator-triggers) or [custom triggers](#custom-triggers) to work. Indicators provide the computed candle data, and the indicator triggers are function checking if they should trigger an order or not.
 
 ## Custom methods based strategies
 
@@ -70,11 +61,6 @@ const eDate = new Date("2021-04-30");
 const candles = await new CandleRepository().getCandles(sDate, eDate, pair, "1m");
 const indicators = new Indicators();
 
-
-// Building the orders
-const askOrder = new Order({ pair, price : "market", quantity : 1, side:  "ask", stopLossTakeProfit : [], closed: false });
-const bidOrder = new Order({ pair, price : "market", quantity : 1, side:  "bid", stopLossTakeProfit : [], closed: false });
-
 // Building the indicator
 const sma = indicators.sma({ period : 12 });
 const price = indicators.price({ mode: "high" });
@@ -83,10 +69,11 @@ const price = indicators.price({ mode: "high" });
 const customTriggerFlow = new CustomTriggerFlow({
   triggers: [
     new CustomTrigger({
-      indicators: [price, sma],
-      orders: [askOrder, bidOrder],
-      method : ([price, sma], [askOrder, bidOrder]) => {
-        return price.lastValue % 2 ? askOrder : bidOrder;
+      parameters: ({indicators: [price, sma]})
+      method : ({ indicators }) => {
+        return indicators.price.lastValue % 2 ?
+          new Order({ pair, price : "market", quantity : 1, side:  "ask", stopLossTakeProfit : [], closed: false }) :
+          new Order({ pair, price : "market", quantity : 1, side:  "bid", stopLossTakeProfit : [], closed: false });
       }
     })
   ]
@@ -94,11 +81,65 @@ const customTriggerFlow = new CustomTriggerFlow({
 
 // Building the stategy & backtest
 const strategy = new Strategy({ indicators: [price, sma], triggerFlow: customTriggerFlow });
-strategy.backtest(candles);
+strategy.run(candles);
+
+console.log(`${strategy.closedPositions.filter(pos => pos.state.profit > 0).length}/${strategy.closedPositions.length} profitable positions`)
 
 ```
 
 
+## Indicator trigger based strategies
+
+An indicator trigger is a function that will be executed automatically at each candle. It takes standardized parameters for quick prototyping.
+
+```ts
+// Imports
+import { Strategy, ExchangePair, Binance } from "yieldfinity";
+import { Indicators } from "yieldfinity/indicators";
+import { Position, Order, StopLoss, TakeProfit } from "yieldfinity/orders";
+import { TriggerFlow } from "yieldfinity/flows";
+import { PriceTrigger, SMATrigger } from "yieldfinity/triggers";
+
+const pair: ExchangePair = "BTCUSDT";
+const sDate = new Date("2021-01-01");
+const eDate = new Date("2021-01-30");
+const binance = new Binance();
+const candles = await binance.getCandles(sDate, eDate, pair, "1m");
+const indicators = new Indicators();
+
+// Building the indicator
+const sma = indicators.sma({ period : 12 });
+const price = indicators.price({ mode: "high" });
+
+// Building the triggers
+const triggers = [
+  new SMATrigger({ indicator: sma, field: "value", triggerValue : 2, comparer: ">=", mode: "percentage", tMinus: 60*24 }),
+  new PriceTrigger({ indicator: price, field: "value", triggerValue : 10, comparer: ">=", mode: "percentage", tMinus:  60 * 12 }),
+];
+
+const triggerFlow = new TriggerFlow({
+  flow : [{
+    triggers,
+    operator : "and",
+    position: new Order({
+      pair,
+      price : "market",
+      quantity : 1,
+      side: "ask",
+      stopLoss : new StopLoss({ reference : "pnl",  value: -5 }),
+      takeProfit : new TakeProfit({ reference : "pnl",  value: 10 })
+    })
+  }]
+});
+
+// Building the stategy & backtest
+const strategy = new Strategy({ indicators: [price, sma], triggerFlow, exchanges: [binance] });
+
+strategy.run(candles);
+
+console.log(`${strategy.closedPositions.filter(pos => pos.state.profit > 0).length}/${strategy.closedPositions.length} profitable positions`)
+
+```
 
 # Candles
 
@@ -121,10 +162,12 @@ interface Candle {
 
 You can fetch the candles from Binance as such :
 ```ts
+import { ExchangePair, Binance } from "yieldfinity";
+
 const pair: ExchangePair  =  "BTCUSDT";
 const sDate = new Date("2021-01-01");
 const eDate = new Date("2021-04-30");
-const candles = await new CandleRepository().getCandles(sDate, eDate, pair, "1m"); // Must be 1m for now
+const candles = await new Binance().getCandles(sDate, eDate, pair, "1m"); // Must be 1m for now
 ```
  
 
@@ -146,7 +189,10 @@ Your indicators can be anything, from a regular technical indicator to an extern
 
 Import the indicators as such :
 ```ts
-import { Indicators } from "./adapters/factories/indicators.factory";
+import { Indicators } from "yieldfinity";
+// or
+import { Indicators } from "yieldfinity/indicators";
+
 const indicators = new Indicators();
 ```
 
@@ -233,7 +279,7 @@ You can create your own triggering method (useful if you want to create signals,
 A custom trigger method must have the following prototype :
 
 ```ts
-type CustomTriggerMethod = (indicators: Indicator[], [askOrder, bidOrder]: Position[]) => Position | false;
+type CustomTriggerMethod = (parameters : any) => Position | null;
 ```
 
 ### Custom Trigger flow
@@ -241,14 +287,17 @@ type CustomTriggerMethod = (indicators: Indicator[], [askOrder, bidOrder]: Posit
 After creating your custom trigger, you must then insert it into a `CustomTriggerFlow`, and pass it to a strategy as such :
 
 ```ts
+import { CustomTriggerFlow } from "yieldfinity";
+// or
+import { CustomTriggerFlow } from "yieldfinity/flows";
+
 // Build a custom strategy flow
 const customTriggerFlow = new CustomTriggerFlow({
   triggers: [
     new CustomTrigger({
-	    indicators: [price], // Indicator[]
-	    orders: [askOrder, bidOrder],
-	    method : ([price], [askOrder, bidOrder]) => {
-	     // Define your own method here, return either the askOrder, bidOrder, or null;
+	    parameters: [price], // Indicator[]
+	    method : ([price]) => {
+	     // Define your own method here, return a position or null;
       }
     })
   ]
@@ -256,7 +305,7 @@ const customTriggerFlow = new CustomTriggerFlow({
 
 // Building the stategy & backtest
 const strategy = new Strategy({ indicators: [price, sma], triggerFlow: customTriggerFlow });
-strategy.backtest(candles);
+strategy.run(candles);
 ```
 
 
@@ -312,6 +361,11 @@ interface IndicatorTrigger {
 After creating your trigger, you must then insert it into a `TriggerFlow`, and pass it to a strategy as such :
 
 ```ts
+import { SMATrigger, PriceTrigger } from "yieldfinity/triggers";
+import { TriggerFlow } from "yieldfinity/flows";
+// or
+import { SMATrigger, PriceTrigger, TriggerFlow } from "yieldfinity/flows";
+
 // Building the triggers
 const triggers = [
   new SMATrigger({ indicator: sma, field: "value", triggerValue : 2, comparer: ">=", mode: "percentage", tMinus: 60*24 }),
@@ -324,7 +378,7 @@ const triggerFlow = new TriggerFlow({
 
 // Building the stategy & backtest
 const strategy = new Strategy({ indicators: [price, sma], triggerFlow: customTriggerFlow });
-strategy.backtest(candles);
+strategy.run(candles);
 ```
 
 ### Available triggers
@@ -404,24 +458,11 @@ interface Strategy {
 You can feed your [indicators](#indicators), [trigger flow](#trigger-flow) or [custom trigger flow](#custom-trigger-flow) and new candles to your strategy and start backtesting like this :
 
 ```ts
+import { Strategy } from "yieldfinity";
+
 // Building the stategy & backtest
 const strategy = new Strategy({ indicators: [price, sma], triggerFlow: customTriggerFlow });
-strategy.backtest(candles);
+
+strategy.run(candles);
 ```
-
-
-# Roadmap
-- Fetch ZIP historical data on Binance for any pair / interval ✔️
-  - Handle date interval  
-- Build or fetch indicators
-  - SMA ✔️
-  - EMA ✔️
-  - RSI ✔️
-  - MACD ✔️
-  - Bullish ✔️
-  - Bearish ✔️
-- Build front
-- Build strategies manager
-- Backtest
-- Profit ?
 

@@ -1,6 +1,8 @@
 # Strategy backtester
 A node strategy backtesting / running framework for crypto trading and more.
 
+⚠️ This project is under active development and is not suitable for production use yet.
+
 # Summary 
 - [Getting started](#getting-started)
 - [Quickstart](#quickstart)

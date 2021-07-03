@@ -36,6 +36,7 @@ A node strategy backtesting / running framework for crypto trading and more.
   - [Backtesting](#strategies)
   - [Model](#model)
   - [Visualising your strategies](https://github.com/fabiensabatie/backtester-front)
+
 # Getting started
 
 Yieldfinity is a TS / node strategy backtesting framework, currently under active development. It fetches candle data from binance for any given pair, allows you to create strategies, feed them indicators and triggers, and backtest them. Strategies rely on one or many [indicators](#indicators) and either [indicator triggers](#indicator-triggers) or [custom triggers](#custom-triggers) to work. Indicators provide the computed candle data, and the indicator triggers are function checking if they should trigger an order or not.
@@ -91,6 +92,8 @@ binance.getCandles(sDate, eDate, pair, "1m")
   const strategy = new Strategy({ indicators: [price, sma], triggerFlow: customTriggerFlow, exchanges: [binance] });
 
   strategy.run(candles);
+
+  // Save your positions before being able to read them
   strategy.savePositions();
 
   const profit = strategy.profit;
@@ -150,8 +153,10 @@ binance.getCandles(sDate, eDate, pair, "1m")
 
   // Building the stategy & backtest
   const strategy = new Strategy({ indicators: [price, sma], triggerFlow, exchanges: [binance] });
-
   strategy.run(candles);
+
+  // Save your positions before being able to read them
+  strategy.savePositions(candles);
 
   console.log(`${strategy.closedPositions.filter(pos => pos.state.profit > 0).length}/${strategy.closedPositions.length} profitable positions`)
 });

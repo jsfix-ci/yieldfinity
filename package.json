@@ -5,8 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm i && tsc",
-    "publish:minor": "npm run build && cp package.json package-lock.json ./dist/ && cd dist && npm update minor && npm publish",
-    "publish:major": "npm run build && cp package.json package-lock.json ./dist/ && cd dist && npm update major && npm publish"
+    "publish:patch": "npm run build && npm version patch && cp package.json package-lock.json ./dist/ && cd dist && npm publish",
+    "publish:minor": "npm run build && npm version minor && cp package.json package-lock.json ./dist/ && cd dist && npm publish",
+    "publish:major": "npm run build && npm version major && cp package.json package-lock.json ./dist/ && cd dist && npm publish"
   },
   "author": "",
   "license": "ISC",

@@ -26,7 +26,7 @@ export class Strategy {
   get positions() : Position[] { return this._positions };
   
   get closedPositions() : Position[] {
-    const positions = fs.readFileSync("positions/" + this._positionsFile, "utf8");
+    const positions = fs.readFileSync(this._positionsFile, "utf8");
     return JSON.parse(positions.replace(/\]\[/g, ","));
   };
 
@@ -48,7 +48,7 @@ export class Strategy {
   }
 
   private appendPositions(positions: Position[]) {
-    fs.appendFileSync("positions/" + this._positionsFile, JSON.stringify(positions.map(position => ({
+    fs.appendFileSync(this._positionsFile, JSON.stringify(positions.map(position => ({
       side: position.side,
       pair: position.pair,
       quantity: position.quantity,

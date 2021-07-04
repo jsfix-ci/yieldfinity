@@ -15,7 +15,7 @@ export class Csv implements CsvService {
 
 
   public async parse(filePath: string, options: CsvParserOptions = {}):Promise<string[][]> {
-    const content = await this.dependencies.file.read(filePath);
+    const content = this.dependencies.file.read(filePath);
     return CsvParse(content, options)
   }
   

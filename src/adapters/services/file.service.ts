@@ -1,7 +1,8 @@
 import Path from "path";
 import axios from "axios";
-import fs from "fs";
 import { FileService } from "../../domain/port/services/file.port";
+import fs from "fs";
+import tmp from "tmp";
 
 
 export class File implements FileService {
@@ -9,8 +10,24 @@ export class File implements FileService {
     fs.unlinkSync(filePath);
   }
 
-  public async read(filePath: string): Promise<string> {
+  public read(filePath: string): string {
     return fs.readFileSync(filePath, 'utf-8');
+  }
+
+  public write(filePath: string, data:string): void {
+    fs.writeFileSync(filePath, data);
+  }
+
+  public appendFile(filePath: string, data:string): void {
+    fs.appendFileSync(filePath, data);
+  }
+
+  public temporaryFile(extension: string):string {
+    return tmp.fileSync({ mode: 0o644, prefix: `${Math.ceil(Math.random() * 10000)}`, postfix: extension }).name;
+  }
+
+  public temporaryFolder():string {
+    return tmp.dirSync().name;
   }
 
   public async download(url: string, filename: string, destination: string):Promise<void> {

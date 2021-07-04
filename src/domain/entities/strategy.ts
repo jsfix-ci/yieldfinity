@@ -6,14 +6,15 @@ import { TriggerFlow } from "./trigger-flow";
 import cliProgress from "cli-progress";
 import { CustomTriggerFlow } from "./custom-trigger-flow";
 import { ExchangeRepository } from "../port/repositories/exchange.port";
-import tmp from "tmp";
-import fs from "fs";
+import { File } from "../../adapters";
+import { FileService } from "../port";
 
 
 export class Strategy {
 
+  private _fileRepository: FileService = new File();
   private _positions: Position[] = [];
-  private _positionsFile: string = tmp.fileSync({ mode: 0o644, prefix: `${Math.ceil(Math.random() * 10000)}`, postfix: '.json' }).name;
+  private _positionsFile: string = this._fileRepository.temporaryFile(".json");
 
   constructor(private props: StrategyProps) { }
   
@@ -28,8 +29,8 @@ export class Strategy {
   get positions() : Position[] { return this._positions };
   
   get closedPositions() : Position[] {
-    const positions = fs.readFileSync(this._positionsFile, "utf8");
-    return JSON.parse(positions.replace(/\]\[/g, ","));
+    const positionsFile = this._fileRepository.read(this._positionsFile);
+    return JSON.parse(positionsFile.replace(/\]\[/g, ","));
   };
 
   get profitablePositions() : Position[] { return this._positions.filter(position => position.state.profit >= 0) };
@@ -50,7 +51,7 @@ export class Strategy {
   }
 
   private appendPositions(positions: Position[]) {
-    fs.appendFileSync(this._positionsFile, JSON.stringify(positions.map(position => ({
+    this._fileRepository.appendFile(this._positionsFile, JSON.stringify(positions.map(position => ({
       side: position.side,
       pair: position.pair,
       quantity: position.quantity,
@@ -89,8 +90,8 @@ export class Strategy {
   }
 
   public savePositions() {
-    const positions = fs.readFileSync(this._positionsFile, "utf8");
+    const positions = this._fileRepository.read(this._positionsFile);
     const closePositions = JSON.parse(positions.replace(/]\[/g, ","));
-    fs.writeFileSync(this._positionsFile, JSON.stringify(closePositions));
+    this._fileRepository.appendFile(this._positionsFile, JSON.stringify(closePositions));
   }
 }

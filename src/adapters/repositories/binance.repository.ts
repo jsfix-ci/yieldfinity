@@ -41,12 +41,12 @@ export class Binance implements ExchangeRepository {
   private buildCandleFileData(date: Date, pair: ExchangePair, interval: ExchangeInterval):CandleZipFile {
     const year = date.getFullYear(),  month = ("0" + (date.getMonth() + 1)).slice(-2), name = `${pair}-${interval}-${year}-${month}`;
     const stamp = Math.ceil(Date.now() + Math.random() * 10000);
-    const tmpFolder = tmp.dirSync();
+    const tmpFolder = this.dependencies.file.temporaryFolder();
     return ({
       url: `${this._url}/${pair}/${interval}/${name}.zip`,
       name : `${name}-${stamp}`,
-      path: `${tmpFolder.name}/${name}-${stamp}.zip`,
-      folder: tmpFolder.name
+      path: `${tmpFolder}/${name}-${stamp}.zip`,
+      folder: tmpFolder
     })
   }
 

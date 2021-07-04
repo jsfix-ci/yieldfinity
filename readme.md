@@ -48,7 +48,7 @@ Yieldfinity is a TS / node strategy backtesting framework, currently under activ
 This method uses a custom function which triggers either a `buy` or a `sell` order. Let's make a ridiculously stupid strategy : if the price is even, we buy, else we sell.
 
 ```ts
-import { Strategy, ExchangePair, Binance } from "yieldfinity";
+import { Strategy, ExchangePair, Binance, Candle } from "yieldfinity";
 import { Indicators } from "yieldfinity/indicators";
 import { Position, Order, StopLoss, TakeProfit } from "yieldfinity/orders";
 import { CustomTriggerFlow } from "yieldfinity/flows";
@@ -114,7 +114,7 @@ An indicator trigger is a function that will be executed automatically at each c
 
 ```ts
 // Imports
-import { Strategy, ExchangePair, Binance } from "yieldfinity";
+import { Strategy, ExchangePair, Binance, Candle } from "yieldfinity";
 import { Indicators } from "yieldfinity/indicators";
 import { Position, Order, StopLoss, TakeProfit } from "yieldfinity/orders";
 import { TriggerFlow } from "yieldfinity/flows";

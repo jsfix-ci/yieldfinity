@@ -87,8 +87,8 @@ export class Strategy {
   }
 
   public savePositions() {
-    const positions = fs.readFileSync("positions/" + this._positionsFile, "utf8");
+    const positions = fs.readFileSync(this._positionsFile, "utf8");
     const closePositions = JSON.parse(positions.replace(/]\[/g, ","));
-    fs.writeFileSync("positions/" + this._positionsFile, JSON.stringify(closePositions));
+    fs.writeFileSync(this._positionsFile, JSON.stringify(closePositions));
   }
 }

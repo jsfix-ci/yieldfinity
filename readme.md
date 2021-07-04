@@ -5,6 +5,7 @@ A node strategy backtesting / running framework for crypto trading and more.
 
 # Summary 
 - [Getting started](#getting-started)
+- [Yieldfinity playground](#yieldfinity-playground)
 - [Quickstart](#quickstart)
   - [Indicator trigger based strategies](#indicator-trigger-based-strategies) Premade indicator triggers for fast prototyping
   - [Custom methods based strategies](#custom-methods-based-strategies) Custom strategy triggers for advanced strategy building
@@ -50,6 +51,7 @@ Checkout the [yieldfinity playground](https://github.com/fabiensabatie/yieldfini
 ![Backtester](https://raw.githubusercontent.com/fabiensabatie/backtester-front/main/public/images/backtester.png)
 
 
+#Quickstart
 ## Custom methods based strategies
 
 This method uses a custom function which triggers either a `buy` or a `sell` order. Let's make a ridiculously stupid strategy : if the price is even, we buy, else we sell.

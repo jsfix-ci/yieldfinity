@@ -19,6 +19,8 @@ export class Strategy {
   
   get indicator() : Indicator[] { return this.props.indicators };
   
+  get positionsFile() : string { return this._positionsFile };
+  
   get triggerFlow() : TriggerFlow | CustomTriggerFlow { return this.props.triggerFlow };
   
   get exchanges() : ExchangeRepository[] { return this.props.exchanges };

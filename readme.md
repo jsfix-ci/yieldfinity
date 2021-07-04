@@ -51,7 +51,7 @@ Checkout the [yieldfinity playground](https://github.com/fabiensabatie/yieldfini
 ![Backtester](https://raw.githubusercontent.com/fabiensabatie/backtester-front/main/public/images/backtester.png)
 
 
-#Quickstart
+# Quickstart
 ## Custom methods based strategies
 
 This method uses a custom function which triggers either a `buy` or a `sell` order. Let's make a ridiculously stupid strategy : if the price is even, we buy, else we sell.

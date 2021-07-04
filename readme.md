@@ -43,6 +43,13 @@ A node strategy backtesting / running framework for crypto trading and more.
 
 Yieldfinity is a TS / node strategy backtesting framework, currently under active development. It fetches candle data from binance for any given pair, allows you to create strategies, feed them indicators and triggers, and backtest them. Strategies rely on one or many [indicators](#indicators) and either [indicator triggers](#indicator-triggers) or [custom triggers](#custom-triggers) to work. Indicators provide the computed candle data, and the indicator triggers are function checking if they should trigger an order or not.
 
+# Yieldfinity playground
+
+Checkout the [yieldfinity playground](https://github.com/fabiensabatie/yieldfinity-playground) : it allows you to code and visualize your strategies directly in your web browser.
+
+![Backtester](https://raw.githubusercontent.com/fabiensabatie/backtester-front/main/public/images/backtester.png)
+
+
 ## Custom methods based strategies
 
 This method uses a custom function which triggers either a `buy` or a `sell` order. Let's make a ridiculously stupid strategy : if the price is even, we buy, else we sell.

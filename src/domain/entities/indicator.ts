@@ -1,5 +1,5 @@
 
-import { IndicatorDependencies, IndicatorInput, IndicatorOutput, IndicatorParameters, IndicatorProps, IndicatorsName } from "../port/entities/indicator.port";
+import { IndicatorInput, IndicatorMethod, IndicatorOutput, IndicatorParameters, IndicatorProps, IndicatorsName } from "../port/entities/indicator.port";
 import { Candle } from "./candle";
 
 export type IndicatorsList = { [key in IndicatorsName] : Indicator[] }
@@ -7,7 +7,9 @@ export type IndicatorsList = { [key in IndicatorsName] : Indicator[] }
 export class Indicator {
 
   private generated:IndicatorOutput[] = [];
-  constructor(private props: IndicatorProps, private dependencies: IndicatorDependencies) {}
+  constructor(private props: IndicatorProps) {
+    this.method.bind(this);
+  }
 
   public get method(): Function { return this.props.method; }
   public get name(): string { return this.props.name; }
@@ -18,8 +20,7 @@ export class Indicator {
 
 
   public generate(candle: Candle) {
-    const input:IndicatorInput = this.dependencies.mapper[this.name](candle, this.parameters);
-    const nextValue = this.method(input) || null;
+    const nextValue = this.method(this.parameters, candle, this.values, this.lastValue, this.lastIndex) ?? null;
     this.generated.push(nextValue);
     return nextValue;
   }

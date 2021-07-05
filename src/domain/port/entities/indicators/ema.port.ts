@@ -1,3 +1,4 @@
+import { Candle } from "../../../entities";
 import { Values } from "../indicator.port";
 import { Position } from "../orders/position.port";
 
@@ -7,9 +8,8 @@ export interface EMAIndicatorParameters {
 
 export type EMAIndicatorOutput = number;
 export type EMAIndicatorInput = number;
-export interface EMAMethod {
-  (price : EMAIndicatorInput): EMAIndicatorOutput;
-};
+
+export type EMAMethod = (parameters: EMAIndicatorParameters, candle: Candle, values: EMAIndicatorOutput[], lastValue: EMAIndicatorOutput, lastIndex: number) => EMAIndicatorOutput;
 
 export interface EMAIndicator {
   name : "ema";
@@ -17,4 +17,3 @@ export interface EMAIndicator {
   parameters : EMAIndicatorParameters
 }
 
-export type EMAIndicatorTriggerValidator = (output : EMAIndicatorOutput) => Position[]

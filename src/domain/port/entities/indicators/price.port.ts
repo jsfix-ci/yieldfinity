@@ -1,3 +1,4 @@
+import { Candle } from "../../../entities";
 import { Position } from "../orders/position.port";
 
 export type PriceIndicatorMode = "high" | "low" | "open" | "close";
@@ -10,9 +11,7 @@ export type PriceIndicatorInput = number;
 
 export type PriceIndicatorOutput = number;
 
-export interface PriceMethod {
-  (prices : PriceIndicatorInput): PriceIndicatorOutput;
-};
+export type PriceMethod = (parameters: PriceIndicatorParameters, candle: Candle, values: PriceIndicatorOutput[], lastValue: PriceIndicatorOutput, lastIndex: number) => PriceIndicatorOutput;
 
 export interface PriceIndicator {
   name : "price";
@@ -20,4 +19,3 @@ export interface PriceIndicator {
   parameters : PriceIndicatorParameters;
 }
 
-export type PriceIndicatorTriggerValidator = (output : PriceIndicatorOutput) => Position[]

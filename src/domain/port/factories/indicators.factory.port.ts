@@ -1,12 +1,10 @@
 import { Indicator } from "../../entities/indicator";
-import { SMATrigger } from "../../entities/triggers/sma.trigger";
-import { ATRIndicatorOutput, ATRIndicatorParameters, ATRIndicatorTriggerValidator } from "../entities/indicators/atr.port";
-import { EMAIndicatorOutput, EMAIndicatorParameters, EMAIndicatorTriggerValidator } from "../entities/indicators/ema.port";
-import { MACDIndicatorOutput, MACDIndicatorParameters, MACDIndicatorTriggerValidator } from "../entities/indicators/macd.port";
+import { ATRIndicatorParameters } from "../entities/indicators/atr.port";
+import { EMAIndicatorParameters } from "../entities/indicators/ema.port";
+import { MACDIndicatorParameters } from "../entities/indicators/macd.port";
 import { PriceIndicatorParameters } from "../entities/indicators/price.port";
-import { RSIIndicatorOutput, RSIIndicatorParameters, RSIIndicatorTriggerValidator } from "../entities/indicators/rsi.port";
-import { SMAIndicatorOutput, SMAIndicatorParameters, SMAIndicatorTriggerValidator } from "../entities/indicators/sma.port";
-import { Position } from "../entities/orders/position.port";
+import { RSIIndicatorParameters } from "../entities/indicators/rsi.port";
+import { SMAIndicatorParameters } from "../entities/indicators/sma.port";
 import { IndicatorMethodParametersMapperInterface } from "../mappers/indicator-method-parameters-mapper.port";
 
 export interface IndicatorsFactoryProps {
@@ -21,12 +19,12 @@ export interface IndicatorTriggersMap {
 
 
 export interface IndicatorsFactoryInterface {
-
+  
+  price(parameters: PriceIndicatorParameters): Indicator;
   sma(parameters: SMAIndicatorParameters): Indicator;
   ema(parameters: EMAIndicatorParameters): Indicator;
   rsi(parameters: RSIIndicatorParameters): Indicator;
   macd(parameters: MACDIndicatorParameters): Indicator;
   atr(parameters: ATRIndicatorParameters): Indicator;
-  price(parameters: PriceIndicatorParameters): Indicator;
   triggers : IndicatorTriggersMap;
 }

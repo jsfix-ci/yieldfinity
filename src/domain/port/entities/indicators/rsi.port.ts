@@ -1,3 +1,4 @@
+import { Candle } from "../../../entities";
 import { Values } from "../indicator.port";
 import { Position } from "../orders/position.port";
 
@@ -8,9 +9,7 @@ export interface RSIIndicatorParameters {
 export type RSIIndicatorOutput = number;
 export type RSIIndicatorInput = number;
 
-export interface RSIMethod {
-  (price : RSIIndicatorInput): RSIIndicatorOutput;
-};
+export type RSIMethod = (parameters: RSIIndicatorParameters, candle: Candle, values: RSIIndicatorOutput[], lastValue: RSIIndicatorOutput, lastIndex: number) => RSIIndicatorOutput;
 
 export interface RSIIndicator {
   name : "rsi";
@@ -18,4 +17,3 @@ export interface RSIIndicator {
   parameters : RSIIndicatorParameters
 }
 
-export type RSIIndicatorTriggerValidator = (output : RSIIndicatorOutput) => Position[]

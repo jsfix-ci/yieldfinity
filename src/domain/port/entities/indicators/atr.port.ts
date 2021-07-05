@@ -1,3 +1,5 @@
+import { Candle } from "../../../entities";
+import { IndicatorMethod } from "../indicator.port";
 import { Position } from "../orders/position.port";
 
 export interface ATRIndicatorParameters {
@@ -12,9 +14,7 @@ export interface ATRIndicatorInput {
 
 export type ATRIndicatorOutput = number;
 
-export interface ATRMethod {
-  (prices : ATRIndicatorInput): ATRIndicatorOutput;
-};
+export type ATRMethod = (parameters: ATRIndicatorParameters, candle: Candle, values: ATRIndicatorOutput[], lastValue: ATRIndicatorOutput, lastIndex: number) => ATRIndicatorOutput;
 
 export interface ATRIndicator {
   name : "atr";
@@ -22,4 +22,3 @@ export interface ATRIndicator {
   parameters : ATRIndicatorParameters;
 }
 
-export type ATRIndicatorTriggerValidator = (output : ATRIndicatorOutput) => Position[]

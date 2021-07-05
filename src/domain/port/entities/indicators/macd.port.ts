@@ -1,3 +1,4 @@
+import { Candle } from "../../../entities";
 import { Values } from "../indicator.port";
 import { Position } from "../orders/position.port";
 
@@ -17,9 +18,7 @@ export type MACDIndicatorOutput = {
 
 export type MACDIndicatorInput = number;
 
-export interface MACDMethod {
-  (price : MACDIndicatorInput): MACDIndicatorOutput;
-};
+export type MACDMethod = (parameters: MACDIndicatorParameters, candle: Candle, values: MACDIndicatorOutput[], lastValue: MACDIndicatorOutput, lastIndex: number) => MACDIndicatorOutput;
 
 export interface MACDIndicator {
   name : "macd";
@@ -27,4 +26,3 @@ export interface MACDIndicator {
   parameters : MACDIndicatorParameters
 }
 
-export type MACDIndicatorTriggerValidator = (output : MACDIndicatorOutput) => Position[]

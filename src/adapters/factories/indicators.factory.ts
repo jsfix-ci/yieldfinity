@@ -1,21 +1,19 @@
 import { Indicator } from "../../domain/entities/indicator";
-import { SMAIndicatorParameters, SMAIndicatorTriggerValidator } from "../../domain/port/entities/indicators/sma.port";
-import * as IndicatorsRepository from "technicalindicators";
-import { IndicatorsFactoryInterface, IndicatorsFactoryProps } from "../../domain/port/factories/indicators.factory.port";
-import { EMAIndicatorParameters, EMAIndicatorTriggerValidator } from "../../domain/port/entities/indicators/ema.port";
-import { RSIIndicatorParameters, RSIIndicatorTriggerValidator } from "../../domain/port/entities/indicators/rsi.port";
-import { MACDIndicatorParameters, MACDIndicatorTriggerValidator } from "../../domain/port/entities/indicators/macd.port";
-import { ATRIndicatorParameters, ATRIndicatorTriggerValidator } from "../../domain/port/entities/indicators/atr.port";
-import { IndicatorDependencies } from "../../domain/port/entities/indicator.port";
-import { Candle } from "../../domain/entities/candle";
+import { ATRIndicatorParameters } from "../../domain/port/entities/indicators/atr.port";
+import { EMAIndicatorParameters } from "../../domain/port/entities/indicators/ema.port";
+import { MACDIndicatorParameters } from "../../domain/port/entities/indicators/macd.port";
 import { PriceIndicatorParameters } from "../../domain/port/entities/indicators/price.port";
-import { IndicatorMethodParametersMapper } from "../mappers/indicator-method.mapper";
-import { v4 as uuid } from "uuid";
+import { RSIIndicatorParameters } from "../../domain/port/entities/indicators/rsi.port";
+import { SMAIndicatorParameters } from "../../domain/port/entities/indicators/sma.port";
+import { IndicatorsFactoryInterface } from "../../domain/port/factories/indicators.factory.port";
+import ATR from "./indicators/atr.indicator-method";
+import EMA from "./indicators/ema.indicator-method";
+import MACD from "./indicators/macd.indicator-method";
+import Price from "./indicators/price.indicator-method";
+import RSI from "./indicators/rsi.indicator-method";
+import SMA from "./indicators/sma.indicator-method";
 
 export class Indicators implements IndicatorsFactoryInterface {
-
-  private dependencies : IndicatorsFactoryProps = { mapper: new IndicatorMethodParametersMapper(), uuid }
-  indicatorDependencies:IndicatorDependencies = { mapper: this.dependencies.mapper };
 
   triggers = {
     sma: ["value"],
@@ -26,27 +24,22 @@ export class Indicators implements IndicatorsFactoryInterface {
   };
 
   sma(parameters: SMAIndicatorParameters): Indicator {
-    const sma = new IndicatorsRepository.SMA({ ...parameters, values: [] });
-    return new Indicator({ name: "sma", method: sma.nextValue, parameters }, this.indicatorDependencies);
+    return new Indicator({ name: "sma", method: SMA, parameters });
   }
   ema(parameters: EMAIndicatorParameters): Indicator {
-    const ema = new IndicatorsRepository.EMA({ ...parameters, values: [] });
-    return new Indicator({ name: "ema", method: ema.nextValue, parameters }, this.indicatorDependencies);
+    return new Indicator({ name: "ema", method: EMA, parameters });
   }
   rsi(parameters: RSIIndicatorParameters): Indicator {
-    const rsi = new IndicatorsRepository.RSI({ ...parameters, values: [] });
-    return new Indicator({ name: "rsi", method: rsi.nextValue, parameters }, this.indicatorDependencies);
+    return new Indicator({ name: "rsi", method: RSI, parameters });
   }
   macd(parameters: MACDIndicatorParameters): Indicator {
-    const macd = new IndicatorsRepository.MACD({ ...parameters, values: [] });
-    return new Indicator({ name: "macd", method: macd.nextValue, parameters }, this.indicatorDependencies);
+    return new Indicator({ name: "macd", method: MACD, parameters });
   }
   atr(parameters: ATRIndicatorParameters): Indicator {
-    const atr = new IndicatorsRepository.ATR({ ...parameters, low: [], high: [], close: [] });
-    return new Indicator({ name: "atr", method: atr.nextValue, parameters }, this.indicatorDependencies);
+    return new Indicator({ name: "atr", method: ATR, parameters });
   }
   price(parameters : PriceIndicatorParameters): Indicator {
-    return new Indicator({ name: "price", method: (price:number) => price, parameters }, this.indicatorDependencies);
+    return new Indicator({ name: "price", method: Price, parameters });
   }
 
 }

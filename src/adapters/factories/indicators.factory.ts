@@ -1,6 +1,6 @@
 import { Indicator } from "../../domain/entities/indicator";
 import { SMAIndicatorParameters, SMAIndicatorTriggerValidator } from "../../domain/port/entities/indicators/sma.port";
-import * as IndicatorsRepository from "./technicalindicators";
+import * as IndicatorsRepository from "technicalindicators";
 import { IndicatorsFactoryInterface, IndicatorsFactoryProps } from "../../domain/port/factories/indicators.factory.port";
 import { EMAIndicatorParameters, EMAIndicatorTriggerValidator } from "../../domain/port/entities/indicators/ema.port";
 import { RSIIndicatorParameters, RSIIndicatorTriggerValidator } from "../../domain/port/entities/indicators/rsi.port";

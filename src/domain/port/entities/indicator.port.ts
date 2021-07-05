@@ -1,4 +1,3 @@
-import { IndicatorMethodParametersMapperInterface } from "../mappers/indicator-method-parameters-mapper.port";
 import { ATRIndicator, ATRIndicatorOutput, ATRIndicatorInput, ATRIndicatorParameters, ATRMethod } from "./indicators/atr.port";
 import { EMAIndicator, EMAIndicatorOutput, EMAIndicatorInput, EMAIndicatorParameters, EMAMethod } from "./indicators/ema.port";
 import { MACDIndicator, MACDIndicatorOutput, MACDIndicatorInput, MACDIndicatorParameters, MACDMethod } from "./indicators/macd.port";
@@ -6,7 +5,6 @@ import { RSIIndicator, RSIIndicatorOutput, RSIIndicatorInput, RSIIndicatorParame
 import { SMAIndicator, SMAIndicatorOutput, SMAIndicatorInput, SMAIndicatorParameters, SMAMethod } from "./indicators/sma.port";
 import { IndicatorTrigger } from "../../entities/triggers/indicator-trigger";
 import { PriceIndicator, PriceIndicatorInput, PriceIndicatorOutput, PriceIndicatorParameters, PriceMethod } from "./indicators/price.port";
-import { Candle } from "../../entities";
 
 export const IndicatorNames = ["sma", "ema", "rsi", "macd", "bearish", "bullish", "atr", "price"] as const;
 export type IndicatorsName = typeof IndicatorNames[number];

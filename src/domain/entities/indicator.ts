@@ -20,7 +20,7 @@ export class Indicator {
 
 
   public generate(candle: Candle) {
-    const nextValue = this.method(this.parameters, candle, this.values, this.lastValue, this.lastIndex) ?? null;
+    const nextValue = this.method(this.parameters, candle, this.values, this.lastValue, this.lastIndex) || null;
     this.generated.push(nextValue);
     return nextValue;
   }

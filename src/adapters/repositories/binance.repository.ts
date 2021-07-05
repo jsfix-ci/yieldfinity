@@ -8,7 +8,6 @@ import CandleMapper from "../mappers/candle.mapper";
 import { Csv } from "../services/csv.service";
 import { File } from "../services/file.service";
 import { Zip } from "../services/zip.service";
-import tmp from "tmp";
 
 interface BinanceExchangeDependencies {
   zip : ZipService,
@@ -19,8 +18,6 @@ interface BinanceExchangeDependencies {
 interface CandleZipFile {
   url : string;
   name : string;
-  path : string;
-  folder : string;
 }
 
 const file = new File(), csv = new Csv({ file }), zip = new Zip();
@@ -40,23 +37,17 @@ export class Binance implements ExchangeRepository {
 
   private buildCandleFileData(date: Date, pair: ExchangePair, interval: ExchangeInterval):CandleZipFile {
     const year = date.getFullYear(),  month = ("0" + (date.getMonth() + 1)).slice(-2), name = `${pair}-${interval}-${year}-${month}`;
-    const stamp = Math.ceil(Date.now() + Math.random() * 10000);
-    const tmpFolder = this.dependencies.file.temporaryFolder();
     return ({
       url: `${this._url}/${pair}/${interval}/${name}.zip`,
-      name : `${name}-${stamp}`,
-      path: `${tmpFolder}/${name}-${stamp}.zip`,
-      folder: tmpFolder
+      name : `${name}`,
     })
   }
 
   private async fetchCandles(sDate: Date, pair: ExchangePair, interval: ExchangeInterval):Promise<Candle[]> {
     const zipFile = this.buildCandleFileData(sDate, pair, interval);
-    await this.dependencies.file.download(zipFile.url, zipFile.name + '.zip', zipFile.folder);
-    await this.dependencies.zip.unzip(zipFile.path, zipFile.name + '.csv', zipFile.folder);
-    const candles = await this.dependencies.csv.parse(`${zipFile.folder}/${zipFile.name}.csv`, { columns: false, skip_empty_lines: true });
-    await this.dependencies.file.delete(`${zipFile.folder}/${zipFile.name}.csv`);
-    await this.dependencies.file.delete(zipFile.path);
+    const buffer = await this.dependencies.file.downloadAsBuffer(zipFile.url);
+    const csvContent = await this.dependencies.zip.unzipBlob(buffer, zipFile.name + '.csv');
+    const candles = await this.dependencies.csv.parse(csvContent, { columns: false, skip_empty_lines: true });
     return candles.map((c:string[]) => CandleMapper.exchanges.binance.toDomain(c, pair));
    }
 

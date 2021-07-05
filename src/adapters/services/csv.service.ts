@@ -14,8 +14,7 @@ export class Csv implements CsvService {
   constructor(private dependencies : CsvServiceDependencies) {}
 
 
-  public async parse(filePath: string, options: CsvParserOptions = {}):Promise<string[][]> {
-    const content = this.dependencies.file.read(filePath);
+  public async parse(content: string, options: CsvParserOptions = {}):Promise<string[][]> {
     return CsvParse(content, options)
   }
   

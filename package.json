@@ -1,6 +1,6 @@
 {
   "name": "yieldfinity",
-  "version": "1.19.0",
+  "version": "1.20.0",
   "main": "index.ts",
   "scripts": {
     "test": "jest --config './jest.config.all.js'",

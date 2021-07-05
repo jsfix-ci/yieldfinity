@@ -7,9 +7,9 @@ export type OrderSide = "ask" | "bid";
 export interface OrderState {
   openAt: Date | null;
   closeAt: Date | null;
-  fee: number | null;
-  profit: number | null;
-  pnl: number | null;
+  fee: number;
+  profit: number;
+  pnl: number;
 }
 
 export interface OrderParameters {

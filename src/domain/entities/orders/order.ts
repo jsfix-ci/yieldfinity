@@ -9,7 +9,7 @@ export class Order {
 
   private _startPrice:number;
   private _open: boolean = true;
-  private _state:OrderState = { openAt: null, closeAt: null, fee: null, profit: null, pnl: null };
+  private _state:OrderState = { openAt: null, closeAt: null, fee: 0, profit: 0, pnl: 0 };
 
   constructor(private props: OrderParameters) { }
 

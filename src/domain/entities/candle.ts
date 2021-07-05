@@ -13,4 +13,5 @@ export class Candle {
   get exchange() : string { return this.props.exchange };
   get pair() : string { return this.props.pair };
   get data() { return this.props }
+  
 }

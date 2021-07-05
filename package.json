@@ -6,9 +6,9 @@
     "test": "jest --config './jest.config.all.js'",
     "build": "npm i && tsc",
     "webpack": "npm i && webpack",
-    "publish:patch": "npm run build && npm version patch && cp README.md package.json package-lock.json patches ./dist/ && cd dist && npm publish",
-    "publish:minor": "npm run build && npm version minor && cp README.md package.json package-lock.json patches ./dist/ && cd dist && npm publish",
-    "publish:major": "npm run build && npm version major && cp README.md package.json package-lock.json patches ./dist/ && cd dist && npm publish",
+    "publish:patch": "npm run build && npm version patch && cp -r README.md package.json package-lock.json patches ./dist/ && cd dist && npm publish",
+    "publish:minor": "npm run build && npm version minor && cp -r README.md package.json package-lock.json patches ./dist/ && cd dist && npm publish",
+    "publish:major": "npm run build && npm version major && cp -r README.md package.json package-lock.json patches ./dist/ && cd dist && npm publish",
     "postinstall": "patch-package"
   },
   "author": "",

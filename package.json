@@ -19,7 +19,7 @@
     "csv-parse": "^4.16.0",
     "glob": "^7.1.7",
     "jszip": "^3.6.0",
-    "technicalindicators": "git+https://github.com/fabiensabatie/technicalindicators.git",
+    "technicalindicators": "^3.1.0",
     "ts-jest": "^27.0.3",
     "tsc": "^2.0.3",
     "uuid": "^8.3.2",

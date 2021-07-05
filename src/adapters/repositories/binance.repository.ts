@@ -20,7 +20,7 @@ interface CandleZipFile {
   name : string;
 }
 
-const file = new File(), csv = new Csv({ file }), zip = new Zip();
+const file = new File(), csv = new Csv(), zip = new Zip();
 const binanceDependencies = { zip, csv, file };
 
 export class Binance implements ExchangeRepository {
@@ -46,7 +46,7 @@ export class Binance implements ExchangeRepository {
   private async fetchCandles(sDate: Date, pair: ExchangePair, interval: ExchangeInterval):Promise<Candle[]> {
     const zipFile = this.buildCandleFileData(sDate, pair, interval);
     const buffer = await this.dependencies.file.downloadAsBuffer(zipFile.url);
-    const csvContent = await this.dependencies.zip.unzipBlob(buffer, zipFile.name + '.csv');
+    const csvContent = await this.dependencies.zip.unzipBuffer(buffer, zipFile.name + '.csv');
     const candles = await this.dependencies.csv.parse(csvContent, { columns: false, skip_empty_lines: true });
     return candles.map((c:string[]) => CandleMapper.exchanges.binance.toDomain(c, pair));
    }

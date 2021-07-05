@@ -19,7 +19,7 @@ export class Indicator {
 
   public generate(candle: Candle) {
     const input:IndicatorInput = this.dependencies.mapper[this.name](candle, this.parameters);
-    const nextValue = this.method(input) ?? null;
+    const nextValue = this.method(input) || null;
     this.generated.push(nextValue);
     return nextValue;
   }

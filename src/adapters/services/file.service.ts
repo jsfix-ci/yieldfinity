@@ -1,8 +1,5 @@
-import Path from "path";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { FileService } from "../../domain/port/services/file.port";
-import fs from "fs";
-import tmp from "tmp";
 
 
 export class File implements FileService {

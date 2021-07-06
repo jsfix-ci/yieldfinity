@@ -7,10 +7,10 @@ export interface SMAIndicatorParameters {
 export type SMAIndicatorOutput = number;
 export type SMAIndicatorInput = number;
 
-export type SMAMethod = (parameters: SMAIndicatorParameters, candle: Candle, values: SMAIndicatorOutput[], lastValue: SMAIndicatorOutput, lastIndex: number) => SMAIndicatorOutput;
+export type SMAMethod = (parameters: SMAIndicatorParameters) => Generator<SMAIndicatorOutput>
 
 export interface SMAIndicator {
   name : "sma";
-  method : SMAMethod;
+  method : Generator<SMAIndicatorOutput>;
   parameters : SMAIndicatorParameters
 }

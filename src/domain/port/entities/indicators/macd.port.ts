@@ -18,11 +18,11 @@ export type MACDIndicatorOutput = {
 
 export type MACDIndicatorInput = number;
 
-export type MACDMethod = (parameters: MACDIndicatorParameters, candle: Candle, values: MACDIndicatorOutput[], lastValue: MACDIndicatorOutput, lastIndex: number) => MACDIndicatorOutput;
+export type MACDMethod = (parameters: MACDIndicatorParameters) => Generator<MACDIndicatorOutput>;
 
 export interface MACDIndicator {
   name : "macd";
-  method : MACDMethod;
+  method : Generator<MACDIndicatorOutput>;
   parameters : MACDIndicatorParameters
 }
 

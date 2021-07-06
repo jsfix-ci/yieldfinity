@@ -12,5 +12,6 @@ export type IndicatorProps = SMAIndicator | EMAIndicator | RSIIndicator | MACDIn
 export type IndicatorParameters = SMAIndicatorParameters | EMAIndicatorParameters | RSIIndicatorParameters | MACDIndicatorParameters | ATRIndicatorParameters | PriceIndicatorParameters;
 export type IndicatorInput = SMAIndicatorInput | EMAIndicatorInput | RSIIndicatorInput | MACDIndicatorInput | ATRIndicatorInput | PriceIndicatorInput;
 export type IndicatorOutput = SMAIndicatorOutput | EMAIndicatorOutput | RSIIndicatorOutput | MACDIndicatorOutput | ATRIndicatorOutput | PriceIndicatorOutput;
-export type IndicatorMethod = PriceMethod | RSIMethod | MACDMethod | EMAMethod | ATRMethod | SMAMethod;
+// export type IndicatorMethod = PriceMethod | RSIMethod | MACDMethod | EMAMethod | ATRMethod | SMAMethod;
+export type IndicatorMethod = SMAMethod;
 export interface Values { values: number[]; }

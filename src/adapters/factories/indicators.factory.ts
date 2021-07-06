@@ -24,22 +24,22 @@ export class Indicators implements IndicatorsFactoryInterface {
   };
 
   sma(parameters: SMAIndicatorParameters): Indicator {
-    return new Indicator({ name: "sma", method: SMA, parameters });
+    return new Indicator({ name: "sma", method: SMA(parameters), parameters });
   }
   ema(parameters: EMAIndicatorParameters): Indicator {
-    return new Indicator({ name: "ema", method: EMA, parameters });
+    return new Indicator({ name: "ema", method: EMA(parameters), parameters });
   }
   rsi(parameters: RSIIndicatorParameters): Indicator {
-    return new Indicator({ name: "rsi", method: RSI, parameters });
+    return new Indicator({ name: "rsi", method: RSI(parameters), parameters });
   }
   macd(parameters: MACDIndicatorParameters): Indicator {
-    return new Indicator({ name: "macd", method: MACD, parameters });
+    return new Indicator({ name: "macd", method: MACD(parameters), parameters });
   }
   atr(parameters: ATRIndicatorParameters): Indicator {
-    return new Indicator({ name: "atr", method: ATR, parameters });
+    return new Indicator({ name: "atr", method: ATR(parameters), parameters });
   }
   price(parameters : PriceIndicatorParameters): Indicator {
-    return new Indicator({ name: "price", method: Price, parameters });
+    return new Indicator({ name: "price", method: Price(parameters), parameters });
   }
 
 }

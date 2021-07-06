@@ -7,11 +7,9 @@ export type IndicatorsList = { [key in IndicatorsName] : Indicator[] }
 export class Indicator {
 
   private generated:IndicatorOutput[] = [];
-  constructor(private props: IndicatorProps) {
-    this.method.bind(this);
-  }
+  constructor(private props: IndicatorProps) {}
 
-  public get method(): Function { return this.props.method; }
+  public get method(): Generator<IndicatorOutput> { return this.props.method; }
   public get name(): string { return this.props.name; }
   public get values():IndicatorOutput[] { return this.generated; }
   public get parameters(): IndicatorParameters  { return this.props.parameters; }
@@ -19,9 +17,9 @@ export class Indicator {
   public get lastIndex() : number { return this.generated.length - 1; }
 
 
-  public generate(candle: Candle) {
-    const nextValue = this.method(this.parameters, candle, this.values, this.lastValue, this.lastIndex) || null;
-    this.generated.push(nextValue);
+  public generate = (candle: Candle) => {
+    const nextValue = this.method.next(candle.close).value;
+    this.generated.push(nextValue || null);
     return nextValue;
   }
 }

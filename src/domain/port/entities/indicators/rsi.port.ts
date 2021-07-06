@@ -9,11 +9,11 @@ export interface RSIIndicatorParameters {
 export type RSIIndicatorOutput = number;
 export type RSIIndicatorInput = number;
 
-export type RSIMethod = (parameters: RSIIndicatorParameters, candle: Candle, values: RSIIndicatorOutput[], lastValue: RSIIndicatorOutput, lastIndex: number) => RSIIndicatorOutput;
+export type RSIMethod = (parameters: RSIIndicatorParameters) => Generator<RSIIndicatorOutput>;
 
 export interface RSIIndicator {
   name : "rsi";
-  method : RSIMethod;
+  method : Generator<RSIIndicatorOutput>;
   parameters : RSIIndicatorParameters
 }
 

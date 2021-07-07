@@ -1,12 +1,9 @@
-import { Candle, PriceIndicatorOutput, PriceIndicatorParameters, PriceMethod } from "../../../domain";
+import { PriceIndicatorParameters, PriceMethodBuilder, PriceMethodParameters } from "../../../domain";
 
-const Price:PriceMethod = (parameters: PriceIndicatorParameters) => {
-  var genFn = (function* (mode) {
-    while(true) yield 1;
-  });
-  const generator = genFn(parameters.mode);
-  generator.next();
-  return generator;
+const Price:PriceMethodBuilder = (parameters: PriceIndicatorParameters) => {
+  return ({ candle }: PriceMethodParameters) => {
+   return parameters.mode === "high" ? candle.high : parameters.mode === "low" ? candle.low : parameters.mode === "open" ? candle.open : candle.close;
+  }
 }
 
 export default Price;

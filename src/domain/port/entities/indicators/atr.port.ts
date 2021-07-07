@@ -14,11 +14,18 @@ export interface ATRIndicatorInput {
 
 export type ATRIndicatorOutput = number;
 
-export type ATRMethod = (parameters: ATRIndicatorParameters) => Generator<ATRIndicatorOutput>;
-
+export type ATRMethodParameters = {
+  candle: Candle,
+  values: ATRIndicatorOutput[],
+  lastValue: ATRIndicatorOutput,
+  lastIndex: number
+}
+export type ATRMethod =  (parameters: ATRMethodParameters) => ATRIndicatorOutput;
+export type ATRMethodBuilder = (parameters: ATRIndicatorParameters) => ATRMethod;
 export interface ATRIndicator {
   name : "atr";
-  method : Generator<ATRIndicatorOutput>;
-  parameters : ATRIndicatorParameters;
+  method : ATRMethod;
+  parameters : ATRIndicatorParameters
 }
+
 

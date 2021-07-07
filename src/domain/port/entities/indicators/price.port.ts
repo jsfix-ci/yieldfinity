@@ -11,11 +11,17 @@ export type PriceIndicatorInput = number;
 
 export type PriceIndicatorOutput = number;
 
-export type PriceMethod = (parameters: PriceIndicatorParameters) => Generator<PriceIndicatorOutput>;
-
+export type PriceMethodParameters = {
+  candle: Candle,
+  values: PriceIndicatorOutput[],
+  lastValue: PriceIndicatorOutput,
+  lastIndex: number
+}
+export type PriceMethod =  (parameters: PriceMethodParameters) => PriceIndicatorOutput;
+export type PriceMethodBuilder = (parameters: PriceIndicatorParameters) => PriceMethod;
 export interface PriceIndicator {
   name : "price";
-  method : Generator<PriceIndicatorOutput>;
-  parameters : PriceIndicatorParameters;
+  method : PriceMethod;
+  parameters : PriceIndicatorParameters
 }
 

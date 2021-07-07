@@ -1,30 +1,29 @@
-import { Candle, RSIIndicatorOutput, RSIIndicatorParameters, RSIMethod } from "../../../domain";
+import { Candle, RSIIndicatorOutput, RSIIndicatorParameters, RSIMethod, RSIMethodBuilder, RSIMethodParameters } from "../../../domain";
+import { Indicators } from "../indicators.factory";
 
-const RSI:RSIMethod = (parameters: RSIIndicatorParameters) => {
-  var genFn = (function* (period) {
-    var list = [];
-    var sum = 0;
-    var counter = 1;
-    var current = yield;
-    var result;
-    list.push(0);
-    while (true) {
-        if (counter < period) {
-            counter++;
-            list.push(current);
-            sum = sum + current;
+const RSI:RSIMethodBuilder = (parameters: RSIIndicatorParameters) => {
+  const indicator = new Indicators();
+  const gain = indicator.averageGain({ period: parameters.period });
+  const loss = indicator.averageLoss({ period: parameters.period });
+  let RS = 0, currentRSI = 0;
+  return ({ candle }: RSIMethodParameters) => {
+    gain.generate(candle);
+    loss.generate(candle);
+    if ((gain.lastValue !== null) && (loss.lastValue !== null)) {
+        if (loss.lastValue === 0) {
+            currentRSI = 100;
+        }
+        else if (gain.lastValue === 0) {
+            currentRSI = 0;
         }
         else {
-            sum = sum - list.shift() + current;
-            result = ((sum) / period);
-            list.push(current);
+            RS = (gain.lastValue as number) / (loss.lastValue as number);
+            RS = isNaN(RS) ? 0 : RS;
+            currentRSI = parseFloat((100 - (100 / (1 + RS))).toFixed(2));
         }
-        current = yield result;
-      }
-  });
-  const generator = genFn(parameters.period);
-  generator.next();
-  return generator;
+    }
+    return currentRSI;
+  }
 }
 
 export default RSI;

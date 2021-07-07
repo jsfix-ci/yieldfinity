@@ -1,30 +1,13 @@
-import { Candle, EMAIndicatorOutput, EMAIndicatorParameters, EMAMethod } from "../../../domain";
+import { EMAIndicatorParameters, EMAMethodBuilder, EMAMethodParameters } from "../../../domain";
 
-const EMA:EMAMethod = (parameters: EMAIndicatorParameters) => {
-  var genFn = (function* (period) {
-    var list = [];
-    var sum = 0;
-    var counter = 1;
-    var current = yield;
-    var result;
-    list.push(0);
-    while (true) {
-        if (counter < period) {
-            counter++;
-            list.push(current);
-            sum = sum + current;
-        }
-        else {
-            sum = sum - list.shift() + current;
-            result = ((sum) / period);
-            list.push(current);
-        }
-        current = yield result;
-      }
-  });
-  const generator = genFn(parameters.period);
-  generator.next();
-  return generator;
+const ema = (period: number, lastValue: number, price: number, smoothing: number = 2) => {
+  const k = smoothing / (period + 1);
+  return price * k + lastValue * (1 - k);
 }
 
+const EMA:EMAMethodBuilder = (parameters: EMAIndicatorParameters) => {
+  return ({ candle, lastValue }: EMAMethodParameters) => ema(parameters.period, lastValue, candle.close)
+}
+
+export { ema };
 export default EMA;

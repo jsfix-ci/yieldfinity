@@ -3,11 +3,10 @@ import { Values } from "../indicator.port";
 import { Position } from "../orders/position.port";
 
 export interface MACDIndicatorParameters {
-  SimpleMAOscillator: boolean;
-  SimpleMASignal: boolean;
   fastPeriod: number;
   slowPeriod: number;
   signalPeriod: number;
+  emaSmoothing?: number;
 }
 
 export type MACDIndicatorOutput = {
@@ -18,11 +17,16 @@ export type MACDIndicatorOutput = {
 
 export type MACDIndicatorInput = number;
 
-export type MACDMethod = (parameters: MACDIndicatorParameters) => Generator<MACDIndicatorOutput>;
-
+export type MACDMethodParameters = {
+  candle: Candle,
+  values: MACDIndicatorOutput[],
+  lastValue: MACDIndicatorOutput,
+  lastIndex: number
+}
+export type MACDMethod =  (parameters: MACDMethodParameters) => MACDIndicatorOutput;
+export type MACDMethodBuilder = (parameters: MACDIndicatorParameters) => MACDMethod;
 export interface MACDIndicator {
   name : "macd";
-  method : Generator<MACDIndicatorOutput>;
+  method : MACDMethod;
   parameters : MACDIndicatorParameters
 }
-

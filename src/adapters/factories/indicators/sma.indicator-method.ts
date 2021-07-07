@@ -1,30 +1,14 @@
-import { Candle, SMAIndicatorOutput, SMAIndicatorParameters, SMAMethod } from "../../../domain";
+import { Candle, SMAIndicatorOutput, SMAIndicatorParameters, SMAMethodBuilder, SMAMethodParameters } from "../../../domain";
 
-const SMA:SMAMethod = (parameters: SMAIndicatorParameters) => {
-  var genFn = (function* (period) {
-    var list = [];
-    var sum = 0;
-    var counter = 1;
-    var current = yield;
-    var result;
-    list.push(0);
-    while (true) {
-        if (counter < period) {
-            counter++;
-            list.push(current);
-            sum = sum + current;
-        }
-        else {
-            sum = sum - list.shift() + current;
-            result = ((sum) / period);
-            list.push(current);
-        }
-        current = yield result;
-      }
-  });
-  const generator = genFn(parameters.period);
-  generator.next();
-  return generator;
+const SMA:SMAMethodBuilder = (parameters: SMAIndicatorParameters) => {
+  const candles = [];
+  let sum = 0;
+  return ({ candle, lastIndex, lastValue }: SMAMethodParameters) => {
+    if (lastIndex >= parameters.period) candles.shift();
+    candles.push(candle);
+    sum = candles.reduce((sum, candle) => sum += candle.close, 0);
+    return sum / (lastIndex >= parameters.period ? parameters.period : candles.length);
+  }
 }
 
 export default SMA;

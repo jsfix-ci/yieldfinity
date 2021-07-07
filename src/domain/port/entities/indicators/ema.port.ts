@@ -9,11 +9,17 @@ export interface EMAIndicatorParameters {
 export type EMAIndicatorOutput = number;
 export type EMAIndicatorInput = number;
 
-export type EMAMethod = (parameters: EMAIndicatorParameters) => Generator<EMAIndicatorOutput>
-
+export type EMAMethodParameters = {
+  candle: Candle,
+  values: EMAIndicatorOutput[],
+  lastValue: EMAIndicatorOutput,
+  lastIndex: number
+}
+export type EMAMethod =  (parameters: EMAMethodParameters) => EMAIndicatorOutput;
+export type EMAMethodBuilder = (parameters: EMAIndicatorParameters) => EMAMethod;
 export interface EMAIndicator {
   name : "ema";
-  method : Generator<EMAIndicatorOutput>;
+  method : EMAMethod;
   parameters : EMAIndicatorParameters
 }
 

@@ -287,8 +287,6 @@ console.log(atr.lastValue) // 748.5
 #### MACD
 ```ts
 const macd = indicators.macd({
-  SimpleMAOscillator: true, // boolean
-  SimpleMASignal: true, // boolean
   fastPeriod: 12, // number
   slowPeriod: 24, // number
   signalPeriod: 12 // number
@@ -459,8 +457,6 @@ const ATRTrigger = new  ATRTrigger({ indicator: price, field: "value", triggerVa
 #### MACD
 ```ts
 const macd = indicators.macd({
-  SimpleMAOscillator: true, // boolean
-  SimpleMASignal: true, // boolean
   fastPeriod: 12, // number
   slowPeriod: 24, // number
   signalPeriod: 12 // number

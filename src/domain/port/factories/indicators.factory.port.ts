@@ -24,10 +24,10 @@ export interface IndicatorsFactoryInterface {
   price(parameters: PriceIndicatorParameters): Indicator;
   sma(parameters: SMAIndicatorParameters): Indicator;
   ema(parameters: EMAIndicatorParameters): Indicator;
-  // rsi(parameters: RSIIndicatorParameters): Indicator;
+  rsi(parameters: RSIIndicatorParameters): Indicator;
   macd(parameters: MACDIndicatorParameters): Indicator;
   // atr(parameters: ATRIndicatorParameters): Indicator;
-  // averageGain(parameters: AverageGainIndicatorParameters): Indicator;
-  // averageLoss(parameters: AverageLossIndicatorParameters): Indicator;
+  averageGain(parameters: AverageGainIndicatorParameters): Indicator;
+  averageLoss(parameters: AverageLossIndicatorParameters): Indicator;
   triggers : IndicatorTriggersMap;
 }

@@ -17,7 +17,7 @@ A node strategy backtesting / running framework for crypto trading and more.
     - [Price](#price)
     - [SMA](#sma)
     - [EMA](#ema)
-    - [RSI](#rsi) - ⚠ not available yet
+    - [RSI](#rsi)
     - [ATR](#atr) - ⚠ not available yet
     - [MACD](#macd)
 - [Triggers](#triggers) Triggers are comparison functions that will trigger an order if the condition is met (i.e. if the indicator reaches a value you defined)
@@ -31,7 +31,7 @@ A node strategy backtesting / running framework for crypto trading and more.
       - [Price](#price-1)
       - [SMA](#sma-1)
       - [EMA](#ema-1)
-      - [RSI](#rsi-1) - ⚠ not available yet
+      - [RSI](#rsi-1)
       - [ATR](#atr-1) - ⚠ not available yet
       - [MACD](#macd-1)
 - [Strategies](#strategies) Bundle your indicators, your triggers, and backtest a strategy
@@ -264,7 +264,7 @@ ema.generate(candle);
 console.log(ema.lastValue) // 124.5
 ```
 
-#### RSI - ⚠ not available yet
+#### RSI
 ```ts
 const rsi = indicators.rsi({
   period : 12 // number;
@@ -440,7 +440,7 @@ const emaTrigger = new  EMATrigger({ indicator: price, field: "value", triggerVa
 // Check if EMA as gained 200 points over the last 24 hours
 ```
 
-#### RSI - ⚠ not available yet
+#### RSI
 ```ts
 const rsi = indicators.rsi({ period: 12 });
 const rsiTrigger = new  RSITrigger({ indicator: price, field: "value", triggerValue : 200, comparer: ">=", mode: "relative", tMinus: 60 * 24 })

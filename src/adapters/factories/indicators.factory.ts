@@ -33,9 +33,9 @@ export class Indicators implements IndicatorsFactoryInterface {
   ema(parameters: EMAIndicatorParameters): Indicator {
     return new Indicator({ name: "ema", method: EMA(parameters), parameters });
   }
-  // rsi(parameters: RSIIndicatorParameters): Indicator {
-  //   return new Indicator({ name: "rsi", method: RSI(parameters), parameters });
-  // }
+  rsi(parameters: RSIIndicatorParameters): Indicator {
+    return new Indicator({ name: "rsi", method: RSI(parameters), parameters });
+  }
   macd(parameters: MACDIndicatorParameters): Indicator {
     return new Indicator({ name: "macd", method: MACD(parameters), parameters });
   }
@@ -45,12 +45,12 @@ export class Indicators implements IndicatorsFactoryInterface {
   price(parameters : PriceIndicatorParameters): Indicator {
     return new Indicator({ name: "price", method: Price(parameters), parameters });
   }
-  // averageGain(parameters: AverageGainIndicatorParameters): Indicator {
-  //   return new Indicator({ name: "average-gain", method: AverageGain(parameters), parameters });
-  // }
-  // averageLoss(parameters: AverageLossIndicatorParameters): Indicator {
-  //   return new Indicator({ name: "average-loss", method: AverageLoss(parameters), parameters });
-  // }
+  averageGain(parameters: AverageGainIndicatorParameters): Indicator {
+    return new Indicator({ name: "average-gain", method: AverageGain(parameters), parameters });
+  }
+  averageLoss(parameters: AverageLossIndicatorParameters): Indicator {
+    return new Indicator({ name: "average-loss", method: AverageLoss(parameters), parameters });
+  }
 
 }
 

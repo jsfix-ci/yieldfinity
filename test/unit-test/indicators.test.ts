@@ -32,18 +32,21 @@ describe("Should generate the indicators", () => {
     expect(highPrice.values).toEqual(mockCandles.map(candle => candle.high))
   })
 
-  it.skip("rsi indicator", async () => { 
-    // const candles = [
-    //   new Candle({ openAt: new Date(), closeAt: new Date(), open: 4, close: 5, high: 5.5, low: 3.5, exchange: "binance", volume: 0, interval: "1m", pair: "BTCUSDT"}),
-    //   new Candle({ openAt: new Date(), closeAt: new Date(), open: 9, close: 10, high:  10.5, low: 8.5, exchange: "binance", volume: 0, interval: "1m", pair: "BTCUSDT"}),
-    //   new Candle({ openAt: new Date(), closeAt: new Date(), open: 14, close: 15, high: 15.5, low: 13.5, exchange: "binance", volume: 0, interval: "1m", pair: "BTCUSDT"}),
-    //   new Candle({ openAt: new Date(), closeAt: new Date(), open: 19, close: 20, high: 20.5, low: 18.5, exchange: "binance", volume: 0, interval: "1m", pair: "BTCUSDT"}),
-    //   new Candle({ openAt: new Date(), closeAt: new Date(), open: 24, close: 25, high: 25.5, low: 23.5, exchange: "binance", volume: 0, interval: "1m", pair: "BTCUSDT"}),
-    // ];
-    // const rsi = new Indicators().rsi({ period : 2 });
-    // candles.map(rsi.generate);
-    // expect(rsi.values).toEqual([null, 3.333333333333333, 7.222222222222222, 11.481481481481481, 15.987654320987653])
-
+  it("rsi indicator", async () => { 
+    const candles = [
+      new Candle({ openAt: new Date(), closeAt: new Date(), open: 4, close: 10, high: 5.5, low: 3.5, exchange: "binance", volume: 0, interval: "1m", pair: "BTCUSDT"}),
+      new Candle({ openAt: new Date(), closeAt: new Date(), open: 9, close: 10, high:  10.5, low: 8.5, exchange: "binance", volume: 0, interval: "1m", pair: "BTCUSDT"}),
+      new Candle({ openAt: new Date(), closeAt: new Date(), open: 14, close: 15, high: 15.5, low: 13.5, exchange: "binance", volume: 0, interval: "1m", pair: "BTCUSDT"}),
+      new Candle({ openAt: new Date(), closeAt: new Date(), open: 19, close: 20, high: 20.5, low: 18.5, exchange: "binance", volume: 0, interval: "1m", pair: "BTCUSDT"}),
+      new Candle({ openAt: new Date(), closeAt: new Date(), open: 24, close: 20, high: 25.5, low: 23.5, exchange: "binance", volume: 0, interval: "1m", pair: "BTCUSDT"}),
+      new Candle({ openAt: new Date(), closeAt: new Date(), open: 24, close: 10, high: 25.5, low: 23.5, exchange: "binance", volume: 0, interval: "1m", pair: "BTCUSDT"}),
+      new Candle({ openAt: new Date(), closeAt: new Date(), open: 24, close: 10, high: 25.5, low: 23.5, exchange: "binance", volume: 0, interval: "1m", pair: "BTCUSDT"}),
+      new Candle({ openAt: new Date(), closeAt: new Date(), open: 24, close: 10, high: 25.5, low: 23.5, exchange: "binance", volume: 0, interval: "1m", pair: "BTCUSDT"}),
+      new Candle({ openAt: new Date(), closeAt: new Date(), open: 24, close: 1, high: 25.5, low: 23.5, exchange: "binance", volume: 0, interval: "1m", pair: "BTCUSDT"}),
+    ];
+    const rsi = new Indicators().rsi({ period : 14 });
+    candles.map(rsi.generate);
+    expect(rsi.values).toEqual([null, null, 100, 100, 100, 100, 100, 100, 73.52941176470588])
   })
 
   it.skip("atr indicator", async () => { 

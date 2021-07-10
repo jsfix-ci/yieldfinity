@@ -12,7 +12,7 @@ export interface OrderState {
   pnl: number;
 }
 
-export interface OrderParameters {
+export interface OrderProps {
   side: OrderSide;
   pair: ExchangePair;
   quantity: number;

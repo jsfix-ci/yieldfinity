@@ -1,4 +1,4 @@
-import { OrderParameters, OrderSide, OrderState } from "../../port/entities/orders/order.port";
+import { OrderProps, OrderSide, OrderState } from "../../port/entities/orders/order.port";
 import { ExchangePair } from "../../port/repositories/exchange.port";
 import { Candle } from "../candle";
 import { StopLoss } from "./stop-loss";
@@ -11,7 +11,7 @@ export class Order {
   private _open: boolean = true;
   private _state:OrderState = { openAt: null, closeAt: null, fee: 0, profit: 0, pnl: 0 };
 
-  constructor(private props: OrderParameters) { }
+  constructor(private props: OrderProps) { }
 
   get side(): OrderSide { return this.props.side }
   get pair(): ExchangePair { return this.props.pair }

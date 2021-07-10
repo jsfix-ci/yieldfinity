@@ -42,6 +42,16 @@ export class Strategy {
     }, {} as IndicatorsList)
   }
 
+  get getPlaygroundPositions() {
+    return this.closedPositions.map(position => ({
+      side: position.side,
+      pair: position.pair,
+      quantity: position.quantity,
+      price: position.price,
+      state: position.state,
+    }))
+  }
+
   public run(candles: Candle[]) {
     // const progress = new cliProgress.SingleBar({format: 'Backtesting [{bar}] {percentage}% | {value}/{total}'}, cliProgress.Presets.legacy);
     // progress.start(candles.length, 0);

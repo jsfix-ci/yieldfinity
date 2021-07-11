@@ -18,7 +18,12 @@ export class Indicator {
 
 
   public generate = (candle: Candle) => {
-    const nextValue = this.method({candle, lastValue: this.lastValue, lastIndex: this.lastIndex, values: this.values });
+    const nextValue = this.method({
+      candle,
+      lastValue: this.lastValue,
+      lastIndex: this.lastIndex,
+      values: this.values
+    });
     this._generated.push(nextValue || null);
     return nextValue;
   }

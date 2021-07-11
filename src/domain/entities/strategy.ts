@@ -31,7 +31,7 @@ export class Strategy {
   
   get profit(): number { return this.closedPositions.reduce((profit, position) => profit + position.state.profit, 0) || 0 }
   
-  get pnl(): number { return (this.closedPositions.reduce((pnl, position) => pnl + position.state.pnl, 0) / this.closedPositions.length) || 0 }
+  get pnl(): number { return this.closedPositions.reduce((pnl, position) => pnl + position.state.pnl, 0) || 0 }
 
   
   get indicators() : IndicatorsList {
@@ -40,16 +40,6 @@ export class Strategy {
       else map[indic.name].push(indic);
       return map;
     }, {} as IndicatorsList)
-  }
-
-  get getPlaygroundPositions() {
-    return this.closedPositions.map(position => ({
-      side: position.side,
-      pair: position.pair,
-      quantity: position.quantity,
-      price: position.price,
-      state: position.state,
-    }))
   }
 
   public run(candles: Candle[]) {

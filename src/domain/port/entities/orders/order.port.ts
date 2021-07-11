@@ -2,7 +2,7 @@ import { ExchangePair } from "../../repositories/exchange.port";
 import { StopLoss } from "../../../entities/orders/stop-loss";
 import { TakeProfit } from "../../../entities/orders/take-profit";
 
-export type OrderSide = "ask" | "bid";
+export type OrderSide = "long" | "short";
 
 export interface OrderState {
   openAt: Date | null;

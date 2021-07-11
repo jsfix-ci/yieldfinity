@@ -12,7 +12,7 @@ const BasicStrategy = ({
   
   if ((price.lastValue >=  10 * yesterdayPrice / 100 + yesterdayPrice) && (Math.ceil(price.lastValue) % 10 === 0))  
     return new Order({
-      pair, price : "market", quantity : 0.001, side:  "ask",
+      pair, price : "market", quantity : 0.001, side:  "long",
       stopLoss : new StopLoss({ reference : "pnl", value: -10 }),
   
       takeProfit : new TakeProfit({ reference : "pnl", value: 20 })

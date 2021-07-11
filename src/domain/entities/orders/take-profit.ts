@@ -10,7 +10,7 @@ export class TakeProfit {
   get reference() : "price" | "pnl" { return this.props.reference };
 
   isReached = (order: Order, currentPrice: number) => {
-    return order.side === "ask" ?
+    return order.side === "long" ?
       this.reference === "price" ? currentPrice >= this.value : order.state.pnl >= this.value
     : this.reference === "price" ? currentPrice <= this.value : order.state.pnl >= this.value;
   }

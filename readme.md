@@ -91,7 +91,7 @@ binance.getCandles(sDate, eDate, pair, "1m")
             pair,
             price : "market",
             quantity : 0.01,
-            side: "ask",
+            side: "long",
             stopLoss : new StopLoss({ reference : "pnl",  value: -5 }),
             takeProfit : new TakeProfit({ reference : "pnl",  value: 10 })
           }) : null;
@@ -156,7 +156,7 @@ binance.getCandles(sDate, eDate, pair, "1m")
         pair,
         price : "market",
         quantity : 1,
-        side: "ask",
+        side: "long",
         stopLoss : new StopLoss({ reference : "pnl",  value: -5 }),
         takeProfit : new TakeProfit({ reference : "pnl",  value: 10 })
       })

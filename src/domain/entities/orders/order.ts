@@ -34,7 +34,7 @@ export class Order {
   };
 
   private updateProfitAndLoss(candle: Candle) {
-    const side = this.side === "ask" ? 1 : -1;
+    const side = this.side === "long" ? 1 : -1;
     const profit = (candle.close - this._startPrice) * side;
     this._state.pnl = profit / this._startPrice * 100;
     this._state.profit = profit  * this.quantity
@@ -43,7 +43,7 @@ export class Order {
   public triggerStopLossTakeProfitIfNecessary = (candle: Candle) => {
     if (!this.opened) return;
     this.updateProfitAndLoss(candle);
-    const currentPrice =  this.side === "ask" ? candle.high : candle.low;
+    const currentPrice =  this.side === "long" ? candle.high : candle.low;
     if (this.stopLoss.isReached(this, currentPrice))
       this.close(candle);
     if (this.takeProfit.isReached(this, currentPrice))

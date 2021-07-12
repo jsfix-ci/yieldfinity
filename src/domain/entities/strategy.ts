@@ -12,6 +12,7 @@ export class Strategy {
 
   private _positions: Position[] = [];
   private _closedPositions: Position[] = [];
+  private _capitalInvested: number = 0;
 
   constructor(private props: StrategyProps) { }
   
@@ -22,6 +23,8 @@ export class Strategy {
   get exchanges() : ExchangeRepository[] { return this.props.exchanges };
   
   get positions() : Position[] { return this._positions };
+
+  get capitalInvested() : number { return this._capitalInvested };
   
   get closedPositions() : Position[] { return this._closedPositions };
 
@@ -40,6 +43,12 @@ export class Strategy {
       else map[indic.name].push(indic);
       return map;
     }, {} as IndicatorsList)
+  }
+
+  public updateCapitalInvested(positions: Position[]) {
+    positions.map(position => {
+      this._capitalInvested += position.startPrice * position.quantity;
+    })
   }
 
   public run(candles: Candle[]) {
@@ -63,6 +72,7 @@ export class Strategy {
       // We check if we have positions to open
       const positionsToOpen = this.triggerFlow.getTriggeredPositions();
       positionsToOpen.map(position => position.open(candle));
+      this.updateCapitalInvested(positionsToOpen);
       this._positions = this._positions.concat(positionsToOpen);
     
       // progress.update(i + 1);

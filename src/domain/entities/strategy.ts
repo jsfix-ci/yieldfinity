@@ -32,9 +32,9 @@ export class Strategy {
 
   get lostPositions() : Position[] { return this._positions.filter(position => position.state.profit < 0) };
   
-  get profit(): number { return this.closedPositions.reduce((profit, position) => profit + position.state.profit, 0) || 0 }
+  get profit(): number { return this._closedPositions.reduce((profit, position) => profit + position.state.profit, 0) || 0 }
   
-  get pnl(): number { return this.closedPositions.reduce((pnl, position) => pnl + position.state.pnl, 0) || 0 }
+  get pnl(): number { return (this._closedPositions.reduce((pnl, position) => pnl + position.state.profit, 0) / this._capitalInvested * 100) || 0 }
 
   
   get indicators() : IndicatorsList {
@@ -55,7 +55,6 @@ export class Strategy {
     // const progress = new cliProgress.SingleBar({format: 'Backtesting [{bar}] {percentage}% | {value}/{total}'}, cliProgress.Presets.legacy);
     // progress.start(candles.length, 0);
     candles.map((candle:Candle, i) => {
-
       // We only keep open positions and store the old ones
       const [openPositions, closedPositions] = this._positions.reduce(([openPositions, closedPositions], position) => {
         position.triggerStopLossTakeProfitIfNecessary(candle);
@@ -63,9 +62,9 @@ export class Strategy {
         return [openPositions, closedPositions];
       }, [[], []] as [Position[], Position[]]);
 
+      if (closedPositions.length) this._closedPositions = [...this._closedPositions, ...closedPositions];
+      
       this._positions = openPositions;
-      if (closedPositions.length) this._closedPositions = this.closedPositions.concat(closedPositions);
-
       // We generate the indicators
       this.indicator.map(indicator => indicator.generate(candle));
 

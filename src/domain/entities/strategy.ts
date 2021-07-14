@@ -10,7 +10,7 @@ import { ExchangeRepository } from "../port/repositories/exchange.port";
 
 export class Strategy {
 
-  private _positions: Position[] = [];
+  private _openPositions: Position[] = [];
   private _closedPositions: Position[] = [];
   private _capitalInvested: number = 0;
 
@@ -22,15 +22,15 @@ export class Strategy {
   
   get exchanges() : ExchangeRepository[] { return this.props.exchanges };
   
-  get positions() : Position[] { return this._positions };
+  get positions() : Position[] { return this._openPositions };
 
   get capitalInvested() : number { return this._capitalInvested };
   
   get closedPositions() : Position[] { return this._closedPositions };
 
-  get profitablePositions() : Position[] { return this._positions.filter(position => position.state.profit >= 0) };
+  get profitablePositions() : Position[] { return this._closedPositions.filter(position => position.state.profit >= 0) };
 
-  get lostPositions() : Position[] { return this._positions.filter(position => position.state.profit < 0) };
+  get lostPositions() : Position[] { return this._closedPositions.filter(position => position.state.profit < 0) };
   
   get profit(): number { return this._closedPositions.reduce((profit, position) => profit + position.state.profit, 0) || 0 }
   
@@ -47,6 +47,7 @@ export class Strategy {
 
   public updateCapitalInvested(positions: Position[]) {
     positions.map(position => {
+      console.log("Investing :", position.startPrice * position.quantity);
       this._capitalInvested += position.startPrice * position.quantity;
     })
   }
@@ -56,7 +57,7 @@ export class Strategy {
     // progress.start(candles.length, 0);
     candles.map((candle:Candle, i) => {
       // We only keep open positions and store the old ones
-      const [openPositions, closedPositions] = this._positions.reduce(([openPositions, closedPositions], position) => {
+      const [openPositions, closedPositions] = this._openPositions.reduce(([openPositions, closedPositions], position) => {
         position.triggerStopLossTakeProfitIfNecessary(candle);
         position.opened ? openPositions.push(position) : closedPositions.push(position);
         return [openPositions, closedPositions];
@@ -64,7 +65,7 @@ export class Strategy {
 
       if (closedPositions.length) this._closedPositions = [...this._closedPositions, ...closedPositions];
       
-      this._positions = openPositions;
+      this._openPositions = openPositions;
       // We generate the indicators
       this.indicator.map(indicator => indicator.generate(candle));
 
@@ -72,7 +73,7 @@ export class Strategy {
       const positionsToOpen = this.triggerFlow.getTriggeredPositions();
       positionsToOpen.map(position => position.open(candle));
       this.updateCapitalInvested(positionsToOpen);
-      this._positions = this._positions.concat(positionsToOpen);
+      this._openPositions = this._openPositions.concat(positionsToOpen);
     
       // progress.update(i + 1);
     }, [] as Position[]);

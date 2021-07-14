@@ -3,7 +3,6 @@ import { Indicator, IndicatorsList } from "./indicator";
 import { StrategyProps } from "../port/entities/strategy.port";
 import { Position } from "../port/entities/orders/position.port";
 import { TriggerFlow } from "./trigger-flow";
-// import cliProgress from "cli-progress";
 import { CustomTriggerFlow } from "./custom-trigger-flow";
 import { ExchangeRepository } from "../port/repositories/exchange.port";
 
@@ -46,15 +45,10 @@ export class Strategy {
   }
 
   public updateCapitalInvested(positions: Position[]) {
-    positions.map(position => {
-      console.log("Investing :", position.startPrice * position.quantity);
-      this._capitalInvested += position.startPrice * position.quantity;
-    })
+    positions.map(position => { this._capitalInvested += position.startPrice * position.quantity; })
   }
 
   public run(candles: Candle[]) {
-    // const progress = new cliProgress.SingleBar({format: 'Backtesting [{bar}] {percentage}% | {value}/{total}'}, cliProgress.Presets.legacy);
-    // progress.start(candles.length, 0);
     candles.map((candle:Candle, i) => {
       // We only keep open positions and store the old ones
       const [openPositions, closedPositions] = this._openPositions.reduce(([openPositions, closedPositions], position) => {
@@ -74,9 +68,6 @@ export class Strategy {
       positionsToOpen.map(position => position.open(candle));
       this.updateCapitalInvested(positionsToOpen);
       this._openPositions = this._openPositions.concat(positionsToOpen);
-    
-      // progress.update(i + 1);
     }, [] as Position[]);
-    // progress.stop();
   }
 }

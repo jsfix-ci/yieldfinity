@@ -18,7 +18,7 @@
     "cli-progress": "^3.9.0",
     "csv-parse": "^4.16.0",
     "glob": "^7.1.7",
-    "jszip": "^3.6.0",
+    "jszip": "^3.7.1",
     "technicalindicators": "^3.1.0",
     "ts-jest": "^27.0.3",
     "tsc": "^2.0.3",

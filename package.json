@@ -20,7 +20,7 @@
     "glob": "^7.1.7",
     "jszip": "^3.6.0",
     "technicalindicators": "^3.1.0",
-    "ts-jest": "^27.0.3",
+    "ts-jest": "^27.0.7",
     "tsc": "^2.0.3",
     "uuid": "^8.3.2",
     "webpack-cli": "^4.7.2"
